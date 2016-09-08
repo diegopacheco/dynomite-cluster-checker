@@ -82,15 +82,15 @@ public class DynomiteClusterCheckerMain {
 			bufferedLogInfo("Checking Node: " + checkerResponse.getServer());
 			
 			if(primary)
-				insert("dynomote", "works", "dyn_o_mite",node,checkerResponse);
+				insert(KeysConfig.TEST_KEY, KeysConfig.TEST_VALUE, "dyn_o_mite",node,checkerResponse);
 			
-			String result = get("dynomote", "dyn_o_mite",node,checkerResponse);
-			if("works".equals(result)){
+			String result = get(KeysConfig.TEST_KEY, "dyn_o_mite",node,checkerResponse);
+			if(KeysConfig.TEST_VALUE.equals(result)){
 				checkerResponse.setConsistency(true);
 				bufferedLogInfo("  200 OK - set/get working fine!");
 			}else{
 				checkerResponse.setConsistency(false);
-				bufferedLogInfo("  ERROR - Inconsistency set/get! Set: works Get: " + result);
+				bufferedLogInfo("  ERROR - Inconsistency set/get! Set: " + KeysConfig.TEST_KEY +  "Get: " + result);
 			}
 		}
 		
@@ -121,7 +121,7 @@ public class DynomiteClusterCheckerMain {
 			for(DynomiteNodeInfo node : seeds){
 				try{
 					DynoJedisClient cluster = DynomiteClusterConnectionManager.createCluster(clusterName,node);
-					cluster.del("dynomite");
+					cluster.del(KeysConfig.TEST_KEY);
 					cluster.stopClient();
 				}catch(Exception e){
 					System.out.println("Could not clean up cluster: " + clusterName + " Node: " + node);
