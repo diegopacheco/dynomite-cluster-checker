@@ -56,7 +56,7 @@ public class DynomiteClusterConnectionManager {
 		            .withDynomiteClusterName(clusterName)
 		            .withCPConfig( new ArchaiusConnectionPoolConfiguration(DynomiteConfig.CLIENT_NAME)
 		            					.setPort(8101)
-		            					.setLocalRack(node.getRack())
+		            					.setLocalRack(node.getDc())
 		            					.withTokenSupplier(testTokenMapSupplier)
 		            					.setMaxConnsPerHost(100) )
 		            .withHostSupplier(customHostSupplier)
