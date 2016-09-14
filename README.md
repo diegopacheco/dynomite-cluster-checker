@@ -85,6 +85,7 @@ All Seeds Cluster Failover test: OK
 ]
 
 **** END DYNOMITE CLUSTER CHECKER ****
+
 #
 # 3. all working good.
 # 
