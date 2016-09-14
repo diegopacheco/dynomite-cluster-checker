@@ -42,7 +42,7 @@ eclipse {
 
 dependencies {
 	compile([
-			   'com.netflix.dyno:dyno-jedis:1.4.6'	
+			   'com.netflix.dyno:dyno-jedis:1.4.7'	
 		    ])
 }
 
