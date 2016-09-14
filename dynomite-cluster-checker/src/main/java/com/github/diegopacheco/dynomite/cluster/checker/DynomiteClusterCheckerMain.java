@@ -68,7 +68,7 @@ public class DynomiteClusterCheckerMain {
 				}
 				
 				bufferedLogInfo("3. Checking cluster failover... ");
-				checkClusterFailOver(DynomiteConfig.CLUSTER_NAME,nodes);
+				bufferedLogInfo("All Seeds Cluster Failover test: " + checkClusterFailOver(DynomiteConfig.CLUSTER_NAME,nodes));
 				
 			}
 			
