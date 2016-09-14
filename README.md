@@ -50,9 +50,11 @@ BAD NODES:
 ]
 
 **** END DYNOMITE CLUSTER CHECKER ****
+
 #
 # 2. One BAD NODES
 #
+
 **** BEGIN DYNOMITE CLUSTER CHECKER ****
 1. Checking cluster connection... 
 BAD NODES:
