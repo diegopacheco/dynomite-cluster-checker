@@ -19,6 +19,7 @@ public class ListJsonPrinter {
 		
 		StringBuffer sb = new StringBuffer("{\n\r");
 		sb.append(" \"failoverStatus\": \"" + rr.getFailoverStatus() +  "\",\n\r");
+		sb.append(" \"nodesReport\":\n\r");
 		Object[] array = list.toArray();
 		sb.append("[\n\r");
 		for(int i=0;i<array.length;i++){
