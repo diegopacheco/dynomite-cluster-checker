@@ -93,7 +93,7 @@ public class CheckerResponse implements JsonPrinter {
 		setGetTime(null);
 		setConsistency(false);
 	}
-
+	
 	public String toJson(){
 		return "{"  + 
 					"\"server\":\""      + server + "\"," +

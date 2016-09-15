@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import com.github.diegopacheco.dynomite.cluster.checker.DynomiteConfig;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
 import com.netflix.dyno.connectionpool.Host;
 import com.netflix.dyno.connectionpool.Host.Status;
@@ -24,7 +25,7 @@ import com.netflix.dyno.jedis.DynoJedisClient;
  */
 public class DynomiteClusterConnectionManager {
 	
-	public static DynoJedisClient createCluster(String clusterName,DynomiteNodeInfo node){
+	public static DynoJedisClient createSingleNodeCluster(String clusterName,DynomiteNodeInfo node){
 		String ip = node.getServer();
 		
 		final HostSupplier customHostSupplier = new HostSupplier() {
@@ -51,16 +52,71 @@ public class DynomiteClusterConnectionManager {
 		};
 		
 		DynoJedisClient dynoClient = new DynoJedisClient.Builder()
-					.withApplicationName("DynomiteClusterChecker")
+					.withApplicationName(DynomiteConfig.CLIENT_NAME)
 		            .withDynomiteClusterName(clusterName)
-		            .withCPConfig( new ArchaiusConnectionPoolConfiguration("DynomiteClusterChecker")
+		            .withCPConfig( new ArchaiusConnectionPoolConfiguration(DynomiteConfig.CLIENT_NAME)
 		            					.setPort(8101)
-		            					.setLocalDC(node.getDc())
+		            					.setLocalRack(node.getDc())
 		            					.withTokenSupplier(testTokenMapSupplier)
 		            					.setMaxConnsPerHost(100) )
 		            .withHostSupplier(customHostSupplier)
 		            .build();
 		return dynoClient;
 	}
+	
+	public static DynoJedisClient createCluster(String clusterName,final List<DynomiteNodeInfo> nodes){
+		DynoJedisClient dynoClient = new DynoJedisClient.Builder()
+					.withApplicationName(DynomiteConfig.CLIENT_NAME)
+		            .withDynomiteClusterName(clusterName)
+		            .withCPConfig( new ArchaiusConnectionPoolConfiguration(DynomiteConfig.CLIENT_NAME)
+		            					.setPort(8101)
+		            					.withTokenSupplier(toTokenMapSupplier(nodes))
+		            					.setMaxConnsPerHost(100) )
+		            .withHostSupplier(toHostSupplier(nodes))
+		            .build();
+		return dynoClient;
+	}
+	
+	private static TokenMapSupplier toTokenMapSupplier(List<DynomiteNodeInfo> nodes){
+		StringBuilder jsonSB = new StringBuilder("[");
+		int count = 0;
+		for(DynomiteNodeInfo node: nodes){
+			jsonSB.append(" {\"token\":\""+ node.getTokens() + "\",\"hostname\":\"" + node.getServer() + "\",\"zone\":\"" +  node.getDc() + "\"} ");
+			count++;
+			if (count < nodes.size())
+				jsonSB.append(" , ");
+		}
+		jsonSB.append(" ]\"");
+		
+	   final String json = jsonSB.toString();
+	   TokenMapSupplier testTokenMapSupplier = new AbstractTokenMapSupplier() {
+			    @Override
+			    public String getTopologyJsonPayload(String hostname) {
+			        return json;
+			    }
+				@Override
+				public String getTopologyJsonPayload(Set<Host> activeHosts) {
+					return json;
+				}
+		};
+		return testTokenMapSupplier;
+	}
+	
+	private static HostSupplier toHostSupplier(List<DynomiteNodeInfo> nodes){
+		final List<Host> hosts = new ArrayList<Host>();
+		
+		for(DynomiteNodeInfo node: nodes){
+			hosts.add(new Host(node.getServer(), 22222, Status.Up).setRack(node.getDc()));
+		}
+		
+		final HostSupplier customHostSupplier = new HostSupplier() {
+		   @Override
+		   public Collection<Host> getHosts() {
+			   return hosts;
+		   }
+		};
+		return customHostSupplier;
+	}
+	
 	
 }
