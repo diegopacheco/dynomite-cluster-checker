@@ -20,15 +20,16 @@ import com.netflix.dyno.jedis.DynoJedisClient;
  */
 public class DynomiteClusterCheckerMain {
 	
-		private static final StringBuffer bufferdLogger = new StringBuffer();
-		private static final ResultReport resultReport = new ResultReport();
-		
-		public static void main(String[] args) throws Throwable {
-			run(args[0]);
-			System.exit(0);
+		private StringBuffer bufferdLogger = new StringBuffer();
+		private ResultReport resultReport = new ResultReport();
+	
+		public static void main(String[] args){
+			DynomiteClusterCheckerMain dcc = new DynomiteClusterCheckerMain();
+			dcc.run(args[0]);
 		}
 		
-		public static String run(String seeds)throws Throwable {
+		public String run(String seeds){
+			
 			resultReport.setNodesReport(new ArrayList<>());
 			CheckerResponse checkerResponse = new CheckerResponse();
 			
@@ -89,7 +90,7 @@ public class DynomiteClusterCheckerMain {
 			return jsonResult;
 		}
 		
-		private static void checkNode(boolean primary,DynomiteNodeInfo node ,String server,CheckerResponse checkerResponse) {
+		private void checkNode(boolean primary,DynomiteNodeInfo node ,String server,CheckerResponse checkerResponse) {
 			checkerResponse.setServer(node.getServer());
 			bufferedLogInfo("Checking Node: " + checkerResponse.getServer());
 			
@@ -106,15 +107,15 @@ public class DynomiteClusterCheckerMain {
 			}
 		}
 		
-		private static void bufferedLogInfo(String msg){
+		private  void bufferedLogInfo(String msg){
 			bufferdLogger.append(msg + "\r\n");
 		}
 		
-		private static void bufferedLogPrint(){
+		private void bufferedLogPrint(){
 			System.out.println(bufferdLogger.toString());
 		}
 		
-		private static List<DynomiteNodeInfo> checkAllNodes(String clusterName,List<DynomiteNodeInfo> nodes){
+		private List<DynomiteNodeInfo> checkAllNodes(String clusterName,List<DynomiteNodeInfo> nodes){
 			List<DynomiteNodeInfo> validNodes = new ArrayList<>();
 			for(DynomiteNodeInfo node : nodes){
 				try{
@@ -129,7 +130,7 @@ public class DynomiteClusterCheckerMain {
 			return validNodes;
 		}
 		
-		private static void cleanUp(String clusterName,List<DynomiteNodeInfo> seeds) throws Throwable {
+		private void cleanUp(String clusterName,List<DynomiteNodeInfo> seeds){
 			for(DynomiteNodeInfo node : seeds){
 				try{
 					DynoJedisClient cluster = DynomiteClusterConnectionManager.createSingleNodeCluster(clusterName,node);
@@ -141,7 +142,7 @@ public class DynomiteClusterCheckerMain {
 			}
 		}
 		
-		private static String checkClusterFailOver(String clusterName,List<DynomiteNodeInfo> nodes){
+		private String checkClusterFailOver(String clusterName,List<DynomiteNodeInfo> nodes){
 			try{
 				DynoJedisClient cluster = DynomiteClusterConnectionManager.createCluster(clusterName,nodes);
 				cluster.set(DynomiteConfig.TEST_FAILOVER_KEY, DynomiteConfig.TEST_FAILOVER_VALUE);
@@ -158,7 +159,7 @@ public class DynomiteClusterCheckerMain {
 			return "OK";
 		}
 		
-		private static void insert(String key,String value,String clusterName,DynomiteNodeInfo node,CheckerResponse checkerResponse) {
+		private void insert(String key,String value,String clusterName,DynomiteNodeInfo node,CheckerResponse checkerResponse) {
 			try{
 				DynoJedisClient cluster = DynomiteClusterConnectionManager.createSingleNodeCluster(clusterName,node);
 				double init = System.currentTimeMillis();
@@ -173,7 +174,7 @@ public class DynomiteClusterCheckerMain {
 			}
 		}
 		
-		private static String get(String key,String clusterName,DynomiteNodeInfo node,CheckerResponse checkerResponse) {
+		private String get(String key,String clusterName,DynomiteNodeInfo node,CheckerResponse checkerResponse) {
 			try{	
 				DynoJedisClient cluster = DynomiteClusterConnectionManager.createSingleNodeCluster(clusterName,node);
 				double init = System.currentTimeMillis();
@@ -190,7 +191,7 @@ public class DynomiteClusterCheckerMain {
 			}
 		}
 		
-		private static void printBench(String msg,double init, double end){
+		private void printBench(String msg,double init, double end){
 			int seconds = (int) ((end - init) / 1000) % 60 ;
 			bufferedLogInfo("  TIME to " + msg + ": " + (end - init) + " ms - " + seconds + " s" );
 		}
