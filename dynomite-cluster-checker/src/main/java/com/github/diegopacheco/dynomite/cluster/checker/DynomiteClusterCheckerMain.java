@@ -21,10 +21,11 @@ import com.netflix.dyno.jedis.DynoJedisClient;
 public class DynomiteClusterCheckerMain {
 	
 		private static final StringBuffer bufferdLogger = new StringBuffer();
-		private static final List<CheckerResponse> clusterResponses = new ArrayList<>();
-	
+		private static final ResultReport resultReport = new ResultReport();
+		
 		public static void main(String[] args) throws Throwable {
 			
+			resultReport.setNodesReport(new ArrayList<>());
 			CheckerResponse checkerResponse = new CheckerResponse();
 			
 			bufferedLogInfo(""); 
@@ -55,7 +56,7 @@ public class DynomiteClusterCheckerMain {
 				checkerResponse.setSeeds(validNodes.toString());
 				
 				checkNode(true,validNodes.get(0),validNodes.get(0).getServer(),checkerResponse);
-				clusterResponses.add(checkerResponse);
+				resultReport.getNodesReport().add(checkerResponse);
 				
 				List<DynomiteNodeInfo> otherSeeds = Lists.newArrayList(validNodes);
 				otherSeeds.remove(0);
@@ -63,19 +64,19 @@ public class DynomiteClusterCheckerMain {
 					for(DynomiteNodeInfo node : otherSeeds){
 						checkerResponse = new CheckerResponse();
 						checkNode(false,node,node.getServer(),checkerResponse);
-						clusterResponses.add(checkerResponse);
+						resultReport.getNodesReport().add(checkerResponse);
 					}
 				}
 				
 				bufferedLogInfo("3. Checking cluster failover... ");
 				String failoverStatus = checkClusterFailOver(DynomiteConfig.CLUSTER_NAME,nodes);
-				checkerResponse.setFailoverStatus(failoverStatus);
+				resultReport.setFailoverStatus(failoverStatus);
 				bufferedLogInfo("All Seeds Cluster Failover test: " + failoverStatus);
 				
 			}
 			
 			bufferedLogInfo("4. Shwoing Results as JSON... ");
-			bufferedLogInfo(ListJsonPrinter.print(clusterResponses));
+			bufferedLogInfo(ListJsonPrinter.print(resultReport));
 			bufferedLogInfo("**** END DYNOMITE CLUSTER CHECKER ****");
 			bufferedLogPrint();
 			

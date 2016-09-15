@@ -17,21 +17,19 @@ public class CheckerResponse implements JsonPrinter {
 	private String insertTime;
 	private String getTime;
 	private boolean consistency = false;
-	private String failoverStatus;
 	
 	private String insertError = null;
 	private String getError = null;
 	
 	public CheckerResponse() {}
 
-	public CheckerResponse(String seeds, String insertTime, String getTime, boolean consistency,String server,String failoverStatus) {
+	public CheckerResponse(String seeds, String insertTime, String getTime, boolean consistency,String server) {
 		super();
 		this.seeds = seeds;
 		this.insertTime = insertTime;
 		this.getTime = getTime;
 		this.consistency = consistency;
 		this.server = server;
-		this.failoverStatus = failoverStatus;
 	}
 
 	public String getInsertTime() {
@@ -90,18 +88,10 @@ public class CheckerResponse implements JsonPrinter {
 		this.getError = getError;
 	}
 	
-	public String getFailoverStatus() {
-		return failoverStatus;
-	}
-	public void setFailoverStatus(String failoverStatus) {
-		this.failoverStatus = failoverStatus;
-	}
-
 	public void cleanUp(){
 		setInsertTime(null);
 		setGetTime(null);
 		setConsistency(false);
-		setFailoverStatus("");
 	}
 	
 	public String toJson(){
@@ -113,7 +103,6 @@ public class CheckerResponse implements JsonPrinter {
 					"\"insertError\":\""  + insertError + "\"," +
 					"\"getError\":\""     + getError + "\"," +
 					"\"consistency\":\""  + consistency + "\"" +
-					"\"failoverStatus\":\""  + failoverStatus + "\"" +
 				"}";
 	}
 	
@@ -126,7 +115,6 @@ public class CheckerResponse implements JsonPrinter {
 				pritIfNotNull("    \"insertError\":\""  + insertError + "\",",insertError) +
 				pritIfNotNull("    \"getError\":\""     + getError + "\",",getError)       +
 				"    \"consistency\":\""  + consistency + "\"\r\n" +
-				"    \"failoverStatus\":\""  + failoverStatus + "\"\r\n" +
 				"  }";
 	}
 	
