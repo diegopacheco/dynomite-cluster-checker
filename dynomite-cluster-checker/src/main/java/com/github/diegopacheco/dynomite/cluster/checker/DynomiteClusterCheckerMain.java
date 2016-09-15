@@ -24,7 +24,11 @@ public class DynomiteClusterCheckerMain {
 		private static final ResultReport resultReport = new ResultReport();
 		
 		public static void main(String[] args) throws Throwable {
-			
+			run(args[0]);
+			System.exit(0);
+		}
+		
+		public static String run(String seeds)throws Throwable {
 			resultReport.setNodesReport(new ArrayList<>());
 			CheckerResponse checkerResponse = new CheckerResponse();
 			
@@ -32,7 +36,7 @@ public class DynomiteClusterCheckerMain {
 			bufferedLogInfo("**** BEGIN DYNOMITE CLUSTER CHECKER ****"); 
 			bufferedLogInfo("1. Checking cluster connection... ");
 				
-			List<DynomiteNodeInfo> nodes      =  DynomiteSeedsParser.parse(args[0]);
+			List<DynomiteNodeInfo> nodes      =  DynomiteSeedsParser.parse(seeds);
 			List<DynomiteNodeInfo> validNodes =  checkAllNodes(DynomiteConfig.CLUSTER_NAME, nodes);
 			List<DynomiteNodeInfo> badNodes   =  Lists.newArrayList(nodes);
 			badNodes.removeAll(validNodes);
@@ -76,12 +80,13 @@ public class DynomiteClusterCheckerMain {
 			}
 			
 			bufferedLogInfo("4. Shwoing Results as JSON... ");
-			bufferedLogInfo(ListJsonPrinter.print(resultReport));
+			String jsonResult = ListJsonPrinter.print(resultReport);
+			bufferedLogInfo(jsonResult);
 			bufferedLogInfo("**** END DYNOMITE CLUSTER CHECKER ****");
 			bufferedLogPrint();
 			
 			cleanUp(DynomiteConfig.CLUSTER_NAME,validNodes);
-			System.exit(0);
+			return jsonResult;
 		}
 		
 		private static void checkNode(boolean primary,DynomiteNodeInfo node ,String server,CheckerResponse checkerResponse) {

@@ -1,6 +1,7 @@
-apply plugin: 'java'
+apply plugin: 'war'
 apply plugin: 'application'
 apply plugin: 'eclipse'
+apply plugin: 'jetty'
 
 version = '1.0'
 sourceCompatibility = 1.8
@@ -42,9 +43,14 @@ eclipse {
 
 dependencies {
 	compile([
-			   'com.netflix.dyno:dyno-jedis:1.4.7'	
+			   'com.netflix.dyno:dyno-jedis:1.4.7',
+			   'javax.servlet:javax.servlet-api:3.1.0'
 		    ])
 }
+
+httpPort = 7766
+stopPort = 7765
+stopKey = "stopKey"
 
 jar {
 	from(configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }) {
