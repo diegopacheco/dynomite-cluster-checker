@@ -15,12 +15,11 @@ Dynomite Cluster Checker checks if a Dynomite cluster is working properly via Dy
 * Check Data Replication across all cluster
 * Check Node Fail over 
 * Check Whole Cluster connectivity and Seeds
+* REST exposure for the report: http://localhost:7766/dynomite-cluster-checker/check?seeds="sd1|sd2|sd3..."
 
 ## TODO
 
-* REST exposure
 * Latency historical comparison
-* Pre-saved seeds
 
 ## Building
 ```bash
@@ -222,5 +221,28 @@ So we will connect in one node and the time and see if data is there.
 -Dexec.args="127.0.0.1:8102:rack1:localdc:1383429731|127.0.0.1:8102:rack1:localdc:1383429731|127.1.1.1:8102:rack1:localdc:1383429731|127.1.1.1:8102:rack1:localdc:1383429731"
 ```
 
-Cheers,
+#### REST API
+
+Run the embeded Jetty server with.
+```
+ dynomite-cluster-checker$ ./gradlew jettyRun
+:compileJava UP-TO-DATE
+:processResources UP-TO-DATE
+:classes UP-TO-DATE
+> Building 75% > :jettyRun > Running at http://localhost:7766/dynomite-cluster-checker
+
+```
+
+Them you can call:  curl http://localhost:7766/dynomite-cluster-checker/check?seeds=127.0.0.1:8101:rack1:local-dc:437425602
+```bash
+  {
+    "server":"127.0.0.1",
+    "seeds":"[127.0.0.1:8101:rack1:local-dc:437425602]",
+    "insertTime":"1.0 ms",
+    "getTime":"2.0 ms",
+    "consistency":"true"
+  }
+```
+
+Cheers, <BR>
 Diego Pacheco (@diego_pacheco)
