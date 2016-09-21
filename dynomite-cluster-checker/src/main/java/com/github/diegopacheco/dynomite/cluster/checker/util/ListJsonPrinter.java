@@ -3,6 +3,7 @@ package com.github.diegopacheco.dynomite.cluster.checker.util;
 import java.util.List;
 
 import com.github.diegopacheco.dynomite.cluster.checker.ResultReport;
+import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
 
 /**
  * Pritns a list of JsonPrinter in Json.
@@ -15,10 +16,25 @@ public class ListJsonPrinter {
 	
 	public static String print(ResultReport rr){
 		List<? extends JsonPrinter> list = rr.getNodesReport();
-		if (list.size()==1) return list.get(0).toPrettyJson();
+		//if (list.size()==1) return list.get(0).toPrettyJson();
 		
 		StringBuffer sb = new StringBuffer("{\n\r");
 		sb.append(" \"failoverStatus\": \"" + rr.getFailoverStatus() +  "\",\n\r");
+		
+		if(rr.getBadNodes()!=null && rr.getBadNodes().size() >= 1 ){
+			sb.append(" \"badNodes\": [");
+			int i = 0;
+			for(DynomiteNodeInfo node: rr.getBadNodes()){
+				sb.append("\"" + node.toString() + "\"");
+				if ((i+1) < rr.getBadNodes().size())
+					sb.append(", ");
+				i++;
+			}
+			sb.append(" ], \n\r");
+		}else{
+			sb.append(" \"badNodes\": [], \n\r");
+		}
+		
 		sb.append(" \"nodesReport\":\n\r");
 		Object[] array = list.toArray();
 		sb.append("[\n\r");
