@@ -16,7 +16,6 @@ public class ListJsonPrinter {
 	
 	public static String print(ResultReport rr){
 		List<? extends JsonPrinter> list = rr.getNodesReport();
-		//if (list.size()==1) return list.get(0).toPrettyJson();
 		
 		StringBuffer sb = new StringBuffer("{\n\r");
 		sb.append(" \"failoverStatus\": \"" + rr.getFailoverStatus() +  "\",\n\r");
