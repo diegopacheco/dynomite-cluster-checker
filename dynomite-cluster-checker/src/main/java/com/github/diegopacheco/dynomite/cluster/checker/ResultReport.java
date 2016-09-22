@@ -16,6 +16,10 @@ public class ResultReport {
 	public String getFailoverStatus() {
 		return failoverStatus;
 	}
+	public int getFailoverStatusTelemetry() {
+		return "ok".toUpperCase().equals(failoverStatus) ? 0 : 1;
+	}
+	
 	public void setFailoverStatus(String failoverStatus) {
 		this.failoverStatus = failoverStatus;
 	}
@@ -23,6 +27,11 @@ public class ResultReport {
 	public List<CheckerResponse> getNodesReport() {
 		return nodesReport;
 	}
+	
+	public int getBadNodesTelemetry() {
+		return (badNodes==null) ? 0 : badNodes.size();
+	}
+	
 	public void setNodesReport(List<CheckerResponse> nodesReport) {
 		this.nodesReport = nodesReport;
 	}

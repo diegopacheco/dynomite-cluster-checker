@@ -10,4 +10,5 @@ package com.github.diegopacheco.dynomite.cluster.checker.util;
  */
 public interface JsonPrinter {
 	public String toPrettyJson();
+	public String toPrettyTelemetryJson();
 }

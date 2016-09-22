@@ -118,6 +118,22 @@ public class CheckerResponse implements JsonPrinter {
 				"  }";
 	}
 	
+	public String toPrettyTelemetryJson(){
+		return "  {\r\n"  + 
+				pritIfNotNull("    \"server\":\""  + server + "\",\r\n",server) +
+				pritIfNotNull("    \"seeds\":\"" + seeds + "\",\r\n",seeds) +
+				pritIfNotNull("    \"insertTime\":\"" + new Double(insertTime.replace("ms", "").trim()).intValue()  + "\",\r\n",insertTime) +
+				pritIfNotNull("    \"getTime\":\""    + new Double(getTime.replace("ms", "").trim()).intValue() + "\",\r\n",getTime) +
+				pritIfNotNull("    \"insertError\":\""  + insertError + "\",",insertError) +
+				pritIfNotNull("    \"getError\":\""     + getError + "\",",getError)       +
+				"    \"consistency\":\""  + resolveBoolean(consistency) + "\"\r\n" +
+				"  }";
+	}
+	
+	private int resolveBoolean(boolean bol){
+		return (bol) ? 0 : 1;
+	}
+	
 	private String pritIfNotNull(String msg,String field){
 		return ("".equals(field) || null == field) ? "" : msg;
 	}

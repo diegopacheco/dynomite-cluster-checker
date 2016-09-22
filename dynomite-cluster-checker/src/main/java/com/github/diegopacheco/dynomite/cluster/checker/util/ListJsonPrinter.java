@@ -38,11 +38,34 @@ public class ListJsonPrinter {
 		Object[] array = list.toArray();
 		sb.append("[\n\r");
 		for(int i=0;i<array.length;i++){
-			sb.append( ((JsonPrinter)array[i]).toPrettyJson() + ( (i+1<array.length) ? ",\n\r" : "\n\r") );
+			sb.append( ((JsonPrinter)array[i]).toPrettyJson() + resolveComma(array,i) );
 		}
 		sb.append("]\n\r");
 		sb.append("}\n\r");
 		return sb.toString();
+	}
+	
+	public static String printTelemetry(ResultReport rr){
+		List<? extends JsonPrinter> list = rr.getNodesReport();
+		
+		StringBuffer sb = new StringBuffer("{\n\r");
+		sb.append(" \"failoverStatus\": \"" + rr.getFailoverStatusTelemetry() +  "\",\n\r");
+		
+		sb.append(" \"badNodes\": "+ rr.getBadNodesTelemetry()  + ", \n\r");
+		
+		sb.append(" \"nodesReport\":\n\r");
+		Object[] array = list.toArray();
+		sb.append("[\n\r");
+		for(int i=0;i<array.length;i++){
+			sb.append( ((JsonPrinter)array[i]).toPrettyTelemetryJson()  + resolveComma(array,i) );
+		}
+		sb.append("]\n\r");
+		sb.append("}\n\r");
+		return sb.toString();
+	}
+	
+	private static String resolveComma(Object[] array,int i){
+		return ( (i+1<array.length) ? ",\n\r" : "\n\r");
 	}
 	
 }
