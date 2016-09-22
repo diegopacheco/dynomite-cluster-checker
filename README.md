@@ -16,6 +16,7 @@ Dynomite Cluster Checker checks if a Dynomite cluster is working properly via Dy
 * Check Node Fail over 
 * Check Whole Cluster connectivity and Seeds
 * REST exposure for the report: http://localhost:7766/dynomite-cluster-checker/check?seeds="sd1|sd2|sd3..."
+* Telemetry Mode: Most of people use solutions like Magios, Sensu, Zabbix, Prometheus, SignalFx and many other - This returns 0 for TRUE and 1 for FALSe or errros. So you can build lerts on top of the result json.
 
 ## TODO
 
@@ -211,6 +212,26 @@ All Seeds Cluster Failover test: FAIL: PoolOfflineException: [host=Host [hostnam
 ]
 
 **** END DYNOMITE CLUSTER CHECKER ****
+
+#
+# 6. Telemetry Mode (i.e: seeds=seed1|seed2|seed3&telemetry=true)
+#
+curl "http://localhost:7766/dynomite-cluster-checker/check?seeds=127.0.0.1:rack1:local-dc:8101:1|127.0.0.22:rack2:local-dc:8101:2|127.0.0.13:rack1:local-dc:8101:1&telemetry=true"
+{
+  "failoverStatus": "0",
+  "badNodes": 2,
+  "nodesReport": [
+    {
+      "server": "127.0.0.1",
+      "seeds": "[127.0.0.1:rack1:local-dc:8101:1]",
+      "insertTime": "1",
+      "getTime": "2",
+      "insertError": "0",
+      "getError": "0",
+      "consistency": "0"
+    }
+  ]
+}
 
 ```
 
