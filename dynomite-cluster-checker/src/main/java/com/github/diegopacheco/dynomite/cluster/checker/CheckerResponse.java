@@ -124,8 +124,8 @@ public class CheckerResponse implements JsonPrinter {
 				pritIfNotNull("    \"seeds\":\"" + seeds + "\",\r\n",seeds) +
 				pritIfNotNull("    \"insertTime\":\"" + new Double(insertTime.replace("ms", "").trim()).intValue()  + "\",\r\n",insertTime) +
 				pritIfNotNull("    \"getTime\":\""    + new Double(getTime.replace("ms", "").trim()).intValue() + "\",\r\n",getTime) +
-				pritIfNotNullTelemetry("    \"insertError\":\""  + insertError + "\",",insertError) +
-				pritIfNotNullTelemetry("    \"getError\":\""     + getError + "\",",getError)       +
+				pritIfNotNull("    \"insertError\":\""  + resolveErrorTelemetry(insertError) + "\",",resolveErrorTelemetry(insertError)) +
+				pritIfNotNull("    \"getError\":\""     + resolveErrorTelemetry(getError) + "\",",resolveErrorTelemetry(getError))       +
 				"    \"consistency\":\""  + resolveBoolean(consistency) + "\"\r\n" +
 				"  }";
 	}
@@ -138,8 +138,8 @@ public class CheckerResponse implements JsonPrinter {
 		return ("".equals(field) || null == field) ? "" : msg;
 	}
 	
-	private int pritIfNotNullTelemetry(String msg,String field){
-		return ("".equals(field) || null == field) ? 0 : 1;
+	private String resolveErrorTelemetry(String field){
+		return ("".equals(field) || null == field) ? "0" : "1";
 	}
 	
 	@Override
