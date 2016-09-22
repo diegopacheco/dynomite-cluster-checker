@@ -124,8 +124,8 @@ public class CheckerResponse implements JsonPrinter {
 				pritIfNotNull("    \"seeds\":\"" + seeds + "\",\r\n",seeds) +
 				pritIfNotNull("    \"insertTime\":\"" + new Double(insertTime.replace("ms", "").trim()).intValue()  + "\",\r\n",insertTime) +
 				pritIfNotNull("    \"getTime\":\""    + new Double(getTime.replace("ms", "").trim()).intValue() + "\",\r\n",getTime) +
-				pritIfNotNull("    \"insertError\":\""  + insertError + "\",",insertError) +
-				pritIfNotNull("    \"getError\":\""     + getError + "\",",getError)       +
+				pritIfNotNullTelemetry("    \"insertError\":\""  + insertError + "\",",insertError) +
+				pritIfNotNullTelemetry("    \"getError\":\""     + getError + "\",",getError)       +
 				"    \"consistency\":\""  + resolveBoolean(consistency) + "\"\r\n" +
 				"  }";
 	}
@@ -136,6 +136,10 @@ public class CheckerResponse implements JsonPrinter {
 	
 	private String pritIfNotNull(String msg,String field){
 		return ("".equals(field) || null == field) ? "" : msg;
+	}
+	
+	private int pritIfNotNullTelemetry(String msg,String field){
+		return ("".equals(field) || null == field) ? 0 : 1;
 	}
 	
 	@Override
