@@ -6,7 +6,7 @@ apply plugin: 'jetty'
 version = '1.0'
 sourceCompatibility = 1.8
 
-mainClassName = "com.github.diegopacheco.dynomite.cluster.checker.checker.DynomiteClusterCheckerMain"
+mainClassName = "com.github.diegopacheco.dynomite.cluster.checker.DynomiteClusterCheckerMain"
 
 applicationDefaultJvmArgs = [
 								 "-Djava.net.preferIPv4Stack=true",
