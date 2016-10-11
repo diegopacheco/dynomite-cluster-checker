@@ -26,7 +26,6 @@ run {
 repositories {
 	jcenter()
 	mavenLocal()
-    mavenCentral()
 }
 
 buildscript {
