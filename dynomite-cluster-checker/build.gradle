@@ -6,7 +6,7 @@ apply plugin: 'jetty'
 version = '1.0'
 sourceCompatibility = 1.8
 
-mainClassName = "com.github.diegopacheco.dynomite.cluster.checker.DynomiteClusterCheckerMain"
+mainClassName = "com.github.diegopacheco.dynomite.cluster.checker.checker.DynomiteClusterCheckerMain"
 
 applicationDefaultJvmArgs = [
 								 "-Djava.net.preferIPv4Stack=true",
@@ -26,6 +26,7 @@ run {
 repositories {
 	jcenter()
 	mavenLocal()
+    mavenCentral()
 }
 
 buildscript {
@@ -47,7 +48,6 @@ dependencies {
 			   'org.apache.commons:commons-lang3:3.4',
 			   'org.slf4j:slf4j-simple:1.7.21'
 		    ])
-
 	compile('com.netflix.dyno:dyno-jedis:1.4.7'){
 	     exclude group: 'org.slf4j', module: 'slf4j-api'
 	}		    
