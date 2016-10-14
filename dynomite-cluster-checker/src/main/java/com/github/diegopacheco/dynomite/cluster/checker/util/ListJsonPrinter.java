@@ -54,7 +54,7 @@ public class ListJsonPrinter {
 		StringBuffer sb = new StringBuffer("{\n\r");
 		sb.append(" \"failoverStatus\": \"" + rr.getFailoverStatusTelemetry() +  "\",\n\r");
 
-		if (areBadNodes(rr.getBadNodes()))
+		if (areBadNodes(rr.getBadNodesTelemetry()))
 			sb.append(" \"badNodeNames\": \""+ String.join(",", rr.getBadNodes().stream().map(badNode -> badNode.getServer()).collect(Collectors.toList()))  + "\", \n\r");
 
 		sb.append(" \"badNodes\": "+ rr.getBadNodesTelemetry()  + ", \n\r");
@@ -70,8 +70,8 @@ public class ListJsonPrinter {
 		return sb.toString();
 	}
 
-	private static boolean areBadNodes(List<DynomiteNodeInfo> badNodes) {
-		return badNodes.size() > 0;
+	private static boolean areBadNodes(int badNodes) {
+		return badNodes > 0;
 	}
 	
 	private static String resolveComma(Object[] array,int i){
