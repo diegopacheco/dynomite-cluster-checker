@@ -1,9 +1,12 @@
 package com.github.diegopacheco.dynomite.cluster.checker.util;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.github.diegopacheco.dynomite.cluster.checker.ResultReport;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 
 /**
  * Pritns a list of JsonPrinter in Json.
@@ -50,7 +53,10 @@ public class ListJsonPrinter {
 		
 		StringBuffer sb = new StringBuffer("{\n\r");
 		sb.append(" \"failoverStatus\": \"" + rr.getFailoverStatusTelemetry() +  "\",\n\r");
-		
+
+		if (areBadNodes(rr.getBadNodesTelemetry()))
+			sb.append(" \"badNodeNames\": \""+ String.join(",", rr.getBadNodes().stream().map(badNode -> badNode.getServer()).collect(Collectors.toList()))  + "\", \n\r");
+
 		sb.append(" \"badNodes\": "+ rr.getBadNodesTelemetry()  + ", \n\r");
 		
 		sb.append(" \"nodesReport\":\n\r");
@@ -62,6 +68,10 @@ public class ListJsonPrinter {
 		sb.append("]\n\r");
 		sb.append("}\n\r");
 		return sb.toString();
+	}
+
+	private static boolean areBadNodes(int badNodes) {
+		return badNodes > 0;
 	}
 	
 	private static String resolveComma(Object[] array,int i){
