@@ -44,9 +44,10 @@ eclipse {
 dependencies {
 	compile([
 			   'javax.servlet:servlet-api:2.5',
+			   'org.apache.commons:commons-lang3:3.4',
 			   'org.slf4j:slf4j-simple:1.7.21'
 		    ])
-
+    testCompile('junit:junit:4.11')
 	compile('com.netflix.dyno:dyno-jedis:1.4.7'){
 	     exclude group: 'org.slf4j', module: 'slf4j-api'
 	}		    
