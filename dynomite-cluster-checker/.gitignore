@@ -1,2 +1,7 @@
 /bin/
+<<<<<<< HEAD
 .classpath
+=======
+.idea
+dynomite-cluster-checker.iml
+>>>>>>> 2fd09032ce1240a62138b222684e75435f92932c

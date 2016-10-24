@@ -25,10 +25,10 @@ public class DynomiteClusterCheckerMain {
 	
 		public static void main(String[] args){
 			DynomiteClusterCheckerMain dcc = new DynomiteClusterCheckerMain();
-			dcc.run(args[0]);
+			dcc.run(args[0],false);
 		}
 		
-		public String run(String seeds){
+		public String run(String seeds,boolean telemetryMode){
 			
 			resultReport.setNodesReport(new ArrayList<>());
 			CheckerResponse checkerResponse = new CheckerResponse();
@@ -43,6 +43,7 @@ public class DynomiteClusterCheckerMain {
 			badNodes.removeAll(validNodes);
 			
 			if(badNodes!=null && badNodes.size() >= 1 ){
+				resultReport.setBadNodes(badNodes);
 				bufferedLogInfo("BAD NODES:");
 				for(DynomiteNodeInfo node: badNodes){
 					bufferedLogInfo("    " + node.toString());
@@ -80,8 +81,8 @@ public class DynomiteClusterCheckerMain {
 				
 			}
 			
-			bufferedLogInfo("4. Shwoing Results as JSON... ");
-			String jsonResult = ListJsonPrinter.print(resultReport);
+			bufferedLogInfo("4. Results as JSON... ");
+			String jsonResult = (telemetryMode) ? ListJsonPrinter.printTelemetry(resultReport) : ListJsonPrinter.print(resultReport);
 			bufferedLogInfo(jsonResult);
 			bufferedLogInfo("**** END DYNOMITE CLUSTER CHECKER ****");
 			bufferedLogPrint();

@@ -118,8 +118,32 @@ public class CheckerResponse implements JsonPrinter {
 				"  }";
 	}
 	
+	public String toPrettyTelemetryJson(){
+		return "  {\r\n"  + 
+				pritIfNotNull("    \"server\":\""  + server + "\",\r\n",server) +
+				pritIfNotNull("    \"seeds\":\"" + seeds + "\",\r\n",seeds) +
+				pritIfNotNull("    \"insertTime\":\"" + getInsertTime(insertTime)  + "\",\r\n",insertTime) +
+				pritIfNotNull("    \"getTime\":\""    + new Double(getTime.replace("ms", "").trim()).intValue() + "\",\r\n",getTime) +
+				pritIfNotNull("    \"insertError\":\""  + resolveErrorTelemetry(insertError) + "\",\r\n",resolveErrorTelemetry(insertError)) +
+				pritIfNotNull("    \"getError\":\""     + resolveErrorTelemetry(getError) + "\",\r\n",resolveErrorTelemetry(getError))       +
+				"    \"consistency\":\""  + resolveBoolean(consistency) + "\"\r\n" +
+				"  }";
+	}
+
+	private int getInsertTime(String insertTime)  {
+		return (insertTime == null) ? 0 : new Double(insertTime.replace("ms", "").trim()).intValue();
+	}
+
+	private int resolveBoolean(boolean bol){
+		return (bol) ? 0 : 1;
+	}
+	
 	private String pritIfNotNull(String msg,String field){
 		return ("".equals(field) || null == field) ? "" : msg;
+	}
+	
+	private String resolveErrorTelemetry(String field){
+		return ("".equals(field) || null == field) ? "0" : "1";
 	}
 	
 	@Override

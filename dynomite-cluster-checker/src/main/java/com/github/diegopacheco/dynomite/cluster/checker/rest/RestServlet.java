@@ -2,6 +2,7 @@ package com.github.diegopacheco.dynomite.cluster.checker.rest;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Enumeration;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,18 +22,41 @@ public class RestServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		PrintWriter out = resp.getWriter();
 		try{
-			String seeds = req.getParameter("seeds").toString();
-			logger.info("Checking seeds: " + seeds);
+			String seeds = req.getParameter("seeds");
+			if (seeds==null){
+				out.write("{ \"Error\": \"Abort! seeds cannot be nuul!\" }");
+				return;
+			}
 			
 			DynomiteClusterCheckerMain dcc = new DynomiteClusterCheckerMain();
-			String json = dcc.run(seeds);
+			boolean ShouldRunTelemetryMode = resolveTelemetryMode(req.getParameterValues("telemetry"));
+			logArgs(req);
+			
+			String json = dcc.run(seeds, ShouldRunTelemetryMode);
 			out.write(json);
 		}catch(Exception e){
-			logger.error(e);
-			out.write("{ \"Error\": " + e.toString() + " }");
+			logger.error(e); 
+			out.write("{ \"Error\": \"" + e.toString() + " - " + org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(e) + "\" }");
 		}finally {
 			out.close();
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void logArgs(HttpServletRequest req){
+		logger.info("Checking seeds: " + req.getParameter("seeds"));
+		logger.info("TELEMETRY mode: " + req.getParameterValues("telemetry"));
+		
+		Enumeration<String> parameterNames = req.getParameterNames();
+		while(parameterNames.hasMoreElements()){
+			 String paramName = parameterNames.nextElement();
+			 logger.info("Other parameter: " + paramName);
+		}
+	}
+	
+	private boolean resolveTelemetryMode(String telemetry[]){
+		if (telemetry==null) return false;
+		return ("true".equals(telemetry[0])) ? true : false;
 	}
 	
 }
