@@ -26,6 +26,9 @@ public class DynomiteClusterCheckerMain {
 		public static void main(String[] args){
 			DynomiteClusterCheckerMain dcc = new DynomiteClusterCheckerMain();
 			dcc.run(args[0],false);
+			//dcc.run("127.0.0.1:8101:rack1:local-dc:437425602",false);
+			//dcc.run("200.50.5.1:8101:rack1:local-dc:437425602",true);
+			//dcc.run("jack.cats.com:8101:rack1:local-dc:437425602",false);
 		}
 		
 		public String run(String seeds,boolean telemetryMode){

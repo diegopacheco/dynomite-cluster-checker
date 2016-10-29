@@ -11,6 +11,7 @@ import com.netflix.dyno.connectionpool.Host;
 import com.netflix.dyno.connectionpool.Host.Status;
 import com.netflix.dyno.connectionpool.HostSupplier;
 import com.netflix.dyno.connectionpool.TokenMapSupplier;
+import com.netflix.dyno.connectionpool.impl.RetryNTimes;
 import com.netflix.dyno.connectionpool.impl.lb.AbstractTokenMapSupplier;
 import com.netflix.dyno.contrib.ArchaiusConnectionPoolConfiguration;
 import com.netflix.dyno.jedis.DynoJedisClient;
@@ -58,7 +59,16 @@ public class DynomiteClusterConnectionManager {
 		            					.setPort(8101)
 		            					.setLocalRack(node.getDc())
 		            					.withTokenSupplier(testTokenMapSupplier)
-		            					.setMaxConnsPerHost(100) )
+		            					.setMaxConnsPerHost(100)
+		            					
+                                        .setPoolShutdownDelay(0)
+                                        .setConnectTimeout(12)
+                                        .setFailOnStartupIfNoHosts(true)
+                                        .setFailOnStartupIfNoHostsSeconds(12)
+                                        .setMaxTimeoutWhenExhausted(12)
+                                        .setSocketTimeout(12)
+		            					.setRetryPolicyFactory(new RetryNTimes.RetryFactory(2))
+		             )
 		            .withHostSupplier(customHostSupplier)
 		            .build();
 		return dynoClient;
@@ -71,7 +81,16 @@ public class DynomiteClusterConnectionManager {
 		            .withCPConfig( new ArchaiusConnectionPoolConfiguration(DynomiteConfig.CLIENT_NAME)
 		            					.setPort(8101)
 		            					.withTokenSupplier(toTokenMapSupplier(nodes))
-		            					.setMaxConnsPerHost(100) )
+		            					.setMaxConnsPerHost(100)
+		            					
+                                        .setPoolShutdownDelay(0)
+                                        .setConnectTimeout(12)
+                                        .setFailOnStartupIfNoHosts(true)
+                                        .setFailOnStartupIfNoHostsSeconds(12)
+                                        .setMaxTimeoutWhenExhausted(12)
+                                        .setSocketTimeout(12)
+		            					.setRetryPolicyFactory(new RetryNTimes.RetryFactory(2))
+		            )
 		            .withHostSupplier(toHostSupplier(nodes))
 		            .build();
 		return dynoClient;
