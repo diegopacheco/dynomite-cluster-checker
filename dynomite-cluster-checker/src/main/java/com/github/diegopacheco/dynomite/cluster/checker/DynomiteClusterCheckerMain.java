@@ -2,8 +2,10 @@ package com.github.diegopacheco.dynomite.cluster.checker;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.github.diegopacheco.dynomite.cluster.checker.cluster.DynomiteClusterConnectionManager;
+import com.github.diegopacheco.dynomite.cluster.checker.hystrix.DynomiteSingleNodeCommand;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteSeedsParser;
 import com.github.diegopacheco.dynomite.cluster.checker.util.ListJsonPrinter;
@@ -24,11 +26,18 @@ public class DynomiteClusterCheckerMain {
 		private ResultReport resultReport = new ResultReport();
 	
 		public static void main(String[] args){
-			DynomiteClusterCheckerMain dcc = new DynomiteClusterCheckerMain();
-			dcc.run(args[0],false);
-			//dcc.run("127.0.0.1:8101:rack1:local-dc:437425602",false);
-			//dcc.run("200.50.5.1:8101:rack1:local-dc:437425602",true);
-			//dcc.run("jack.cats.com:8101:rack1:local-dc:437425602",false);
+			Long init = System.currentTimeMillis();
+			try{
+				DynomiteClusterCheckerMain dcc = new DynomiteClusterCheckerMain();
+				//dcc.run(args[0],false);
+				//dcc.run("200.56.0.1:8101:rack1:local-dc:437425602",true);
+				dcc.run("127.0.0.1:8101:rack1:local-dc:437425602",true);
+				//dcc.run("jack.cats.com:8101:rack1:local-dc:437425602",false);
+			}finally {
+				Long end = System.currentTimeMillis();
+				System.out.println("--");
+				System.out.println( "TIME TO RUN: " + TimeUnit.MILLISECONDS.toSeconds((end-init)) + " seconds");
+			}
 		}
 		
 		public String run(String seeds,boolean telemetryMode){
@@ -123,10 +132,10 @@ public class DynomiteClusterCheckerMain {
 			List<DynomiteNodeInfo> validNodes = new ArrayList<>();
 			for(DynomiteNodeInfo node : nodes){
 				try{
-					DynoJedisClient cluster = DynomiteClusterConnectionManager.createSingleNodeCluster(clusterName,node);
-					cluster.get("awesomeSbrubles");
-					cluster.stopClient();
-					validNodes.add(node);
+					DynomiteSingleNodeCommand cmd = new DynomiteSingleNodeCommand(clusterName, node); 
+					boolean isNodeOkay = cmd.execute();
+					if (isNodeOkay)
+						validNodes.add(node);
 				}catch(Exception e){
 					System.out.println("Could not Connet on Node: " + node + " EX: " + e);
 				}

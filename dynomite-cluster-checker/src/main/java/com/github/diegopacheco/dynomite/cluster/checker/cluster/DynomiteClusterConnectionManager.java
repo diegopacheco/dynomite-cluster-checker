@@ -11,7 +11,6 @@ import com.netflix.dyno.connectionpool.Host;
 import com.netflix.dyno.connectionpool.Host.Status;
 import com.netflix.dyno.connectionpool.HostSupplier;
 import com.netflix.dyno.connectionpool.TokenMapSupplier;
-import com.netflix.dyno.connectionpool.impl.RetryNTimes;
 import com.netflix.dyno.connectionpool.impl.lb.AbstractTokenMapSupplier;
 import com.netflix.dyno.contrib.ArchaiusConnectionPoolConfiguration;
 import com.netflix.dyno.jedis.DynoJedisClient;
@@ -57,18 +56,18 @@ public class DynomiteClusterConnectionManager {
 		            .withDynomiteClusterName(clusterName)
 		            .withCPConfig( new ArchaiusConnectionPoolConfiguration(DynomiteConfig.CLIENT_NAME)
 		            					.setPort(8101)
-		            					.setLocalRack(node.getDc())
+		            					.setLocalRack(node.getRack())
+		            					.setLocalDataCenter(node.getDc())
 		            					.withTokenSupplier(testTokenMapSupplier)
 		            					.setMaxConnsPerHost(100)
-		            					
-                                        .setPoolShutdownDelay(0)
-                                        .setConnectTimeout(12)
-                                        .setFailOnStartupIfNoHosts(true)
-                                        .setFailOnStartupIfNoHostsSeconds(12)
-                                        .setMaxTimeoutWhenExhausted(12)
-                                        .setSocketTimeout(12)
-		            					.setRetryPolicyFactory(new RetryNTimes.RetryFactory(2))
-		             )
+                                        //.setPoolShutdownDelay(0)
+                                        //.setConnectTimeout(4)
+                                        //.setFailOnStartupIfNoHosts(true)
+                                        //.setFailOnStartupIfNoHostsSeconds(4)
+                                        //.setMaxTimeoutWhenExhausted(4)
+                                        //.setSocketTimeout(4)
+                                        //.setRetryPolicyFactory(new RetryNTimes.RetryFactory(2))
+		            )
 		            .withHostSupplier(customHostSupplier)
 		            .build();
 		return dynoClient;
@@ -78,18 +77,20 @@ public class DynomiteClusterConnectionManager {
 		DynoJedisClient dynoClient = new DynoJedisClient.Builder()
 					.withApplicationName(DynomiteConfig.CLIENT_NAME)
 		            .withDynomiteClusterName(clusterName)
+		            // ConnectionPoolConfigurationImpl
 		            .withCPConfig( new ArchaiusConnectionPoolConfiguration(DynomiteConfig.CLIENT_NAME)
 		            					.setPort(8101)
+		            					//.setLocalRack(nodes.get(0).getRack())
+		            					//.setLocalDataCenter(nodes.get(0).getDc())
 		            					.withTokenSupplier(toTokenMapSupplier(nodes))
 		            					.setMaxConnsPerHost(100)
-		            					
-                                        .setPoolShutdownDelay(0)
-                                        .setConnectTimeout(12)
-                                        .setFailOnStartupIfNoHosts(true)
-                                        .setFailOnStartupIfNoHostsSeconds(12)
-                                        .setMaxTimeoutWhenExhausted(12)
-                                        .setSocketTimeout(12)
-		            					.setRetryPolicyFactory(new RetryNTimes.RetryFactory(2))
+                                        //.setPoolShutdownDelay(0)
+                                        //.setConnectTimeout(4)
+                                        //.setFailOnStartupIfNoHosts(true)
+                                        //.setFailOnStartupIfNoHostsSeconds(4)
+                                        //.setMaxTimeoutWhenExhausted(4)
+                                        //.setSocketTimeout(4)
+                                        //.setRetryPolicyFactory(new RetryNTimes.RetryFactory(2))
 		            )
 		            .withHostSupplier(toHostSupplier(nodes))
 		            .build();

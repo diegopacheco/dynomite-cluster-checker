@@ -18,22 +18,23 @@ public class CommandDCC extends HystrixCommand<String> {
                 .andCommandPropertiesDefaults(
                 	HystrixCommandProperties.Setter()
                 	   .withExecutionTimeoutEnabled(true)
+                	   .withExecutionIsolationThreadInterruptOnTimeout(true)
                 	   .withExecutionIsolationStrategy(ExecutionIsolationStrategy.THREAD)
-                       .withExecutionTimeoutInMilliseconds(50000)
+                       .withExecutionTimeoutInMilliseconds(60000)
                     )
         );
         
         this.seeds = seeds;
         this.isTelemetryMode = isTelemetryMode;
         
-        ConfigurationManager.getConfigInstance().setProperty(
-        		  "hystrix.command.DCCGroup.execution.isolation.thread.timeoutInMilliseconds", 
-        		  50000);
+//        ConfigurationManager.getConfigInstance().setProperty(
+//        		  "hystrix.command.DCCGroup.execution.isolation.thread.timeoutInMilliseconds", 
+//        		  20000);
     }
     
     @Override
     protected String getFallback() {
-    	return "FALLBACK";
+    	return "DCC TIMEOUT";
     }
 
     @Override
