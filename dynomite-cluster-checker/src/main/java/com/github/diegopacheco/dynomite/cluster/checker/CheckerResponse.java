@@ -88,6 +88,7 @@ public class CheckerResponse implements JsonPrinter {
 		this.getError = getError;
 	}
 	
+	
 	public void cleanUp(){
 		setInsertTime(null);
 		setGetTime(null);

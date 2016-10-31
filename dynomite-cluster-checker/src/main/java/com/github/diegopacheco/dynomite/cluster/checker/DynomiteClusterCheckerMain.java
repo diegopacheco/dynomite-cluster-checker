@@ -31,7 +31,7 @@ public class DynomiteClusterCheckerMain {
 				DynomiteClusterCheckerMain dcc = new DynomiteClusterCheckerMain();
 				//dcc.run(args[0],false);
 				//dcc.run("200.56.0.1:8101:rack1:local-dc:437425602",true);
-				dcc.run("127.0.0.1:8101:rack1:local-dc:437425602",true);
+				dcc.run("227.0.0.1:8101:rack1:local-dc:437425602|127.0.0.1:8101:rack1:local-dc:437425602",false);
 				//dcc.run("jack.cats.com:8101:rack1:local-dc:437425602",false);
 			}finally {
 				Long end = System.currentTimeMillis();
@@ -41,6 +41,8 @@ public class DynomiteClusterCheckerMain {
 		}
 		
 		public String run(String seeds,boolean telemetryMode){
+			
+			Long init = System.currentTimeMillis();
 			
 			resultReport.setNodesReport(new ArrayList<>());
 			CheckerResponse checkerResponse = new CheckerResponse();
@@ -92,6 +94,10 @@ public class DynomiteClusterCheckerMain {
 				bufferedLogInfo("All Seeds Cluster Failover test: " + failoverStatus);
 				
 			}
+			
+			Long end = System.currentTimeMillis();
+			String timeToRun = TimeUnit.MILLISECONDS.toSeconds((end-init)) + "";
+			resultReport.setTimeToRun(timeToRun);
 			
 			bufferedLogInfo("4. Results as JSON... ");
 			String jsonResult = (telemetryMode) ? ListJsonPrinter.printTelemetry(resultReport) : ListJsonPrinter.print(resultReport);

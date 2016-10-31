@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableList;
 
 public class ResultReport {
 	
+	private String timeToRun;
 	private String failoverStatus;
 	private List<CheckerResponse> nodesReport;
 	private List<DynomiteNodeInfo> badNodes;
@@ -41,6 +42,14 @@ public class ResultReport {
 	}
 	public void setBadNodes(List<DynomiteNodeInfo> badNodes) {
 		this.badNodes =  ImmutableList.copyOf(badNodes);
+	}
+	
+	
+	public String getTimeToRun() {
+		return timeToRun;
+	}
+	public void setTimeToRun(String timeToRun) {
+		this.timeToRun = timeToRun;
 	}
 
 	@Override

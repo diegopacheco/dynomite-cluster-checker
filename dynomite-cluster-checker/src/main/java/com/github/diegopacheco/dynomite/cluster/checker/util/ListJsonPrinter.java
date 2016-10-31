@@ -21,6 +21,7 @@ public class ListJsonPrinter {
 		List<? extends JsonPrinter> list = rr.getNodesReport();
 		
 		StringBuffer sb = new StringBuffer("{\n\r");
+		sb.append(" \"timeToRun\": \"" + rr.getTimeToRun() + " seconds" + "\",\n\r");
 		sb.append(" \"failoverStatus\": \"" + rr.getFailoverStatus() +  "\",\n\r");
 		
 		if(rr.getBadNodes()!=null && rr.getBadNodes().size() >= 1 ){
@@ -52,6 +53,7 @@ public class ListJsonPrinter {
 		List<? extends JsonPrinter> list = rr.getNodesReport();
 		
 		StringBuffer sb = new StringBuffer("{\n\r");
+		sb.append(" \"timeToRun\": \"" + rr.getTimeToRun() +  "\",\n\r");
 		sb.append(" \"failoverStatus\": \"" + rr.getFailoverStatusTelemetry() +  "\",\n\r");
 
 		if (areBadNodes(rr.getBadNodesTelemetry()))
