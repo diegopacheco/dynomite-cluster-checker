@@ -12,6 +12,7 @@ public class CommandDCCTest {
 	@Test
 	public void testHystrixCommandSync(){
 		CommandDCC cmd = new CommandDCC("127.0.0.1:8101:rack1:local-dc:437425602",true); 
+		//CommandDCC cmd = new CommandDCC("230.60.60.1:8101:rack1:local-dc:437425602",true);
 		Long init = System.currentTimeMillis();
 		try{
 			String json = cmd.execute();
