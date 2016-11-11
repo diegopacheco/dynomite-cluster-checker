@@ -20,7 +20,7 @@ public class CommandDCC extends HystrixCommand<String> {
                 	   .withExecutionTimeoutEnabled(true)
                 	   .withExecutionIsolationThreadInterruptOnTimeout(true)
                 	   .withExecutionIsolationStrategy(ExecutionIsolationStrategy.THREAD)
-                       .withExecutionTimeoutInMilliseconds(50000)
+                       .withExecutionTimeoutInMilliseconds(30000)
                     )
         );
         
@@ -29,7 +29,7 @@ public class CommandDCC extends HystrixCommand<String> {
         
 //        ConfigurationManager.getConfigInstance().setProperty(
 //        		  "hystrix.command.DCCGroup.execution.isolation.thread.timeoutInMilliseconds", 
-//        		  50000);
+//        		  30000);
     }
     
     @Override
