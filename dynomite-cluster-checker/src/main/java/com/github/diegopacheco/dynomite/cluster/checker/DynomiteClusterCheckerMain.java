@@ -150,63 +150,77 @@ public class DynomiteClusterCheckerMain {
 		}
 		
 		private void cleanUp(String clusterName,List<DynomiteNodeInfo> seeds){
+			DynoJedisClient cluster = null;
 			for(DynomiteNodeInfo node : seeds){
 				try{
-					DynoJedisClient cluster = DynomiteClusterConnectionManager.createSingleNodeCluster(clusterName,node);
+					cluster = DynomiteClusterConnectionManager.createSingleNodeCluster(clusterName,node);
 					cluster.del(DynomiteConfig.TEST_KEY);
-					cluster.stopClient();
 				}catch(Exception e){
 					System.out.println("Could not clean up cluster: " + clusterName + " Node: " + node);
+				}finally {
+					if (cluster!=null)
+						cluster.stopClient();
 				}
 			}
 		}
 		
 		private String checkClusterFailOver(String clusterName,List<DynomiteNodeInfo> nodes){
+			DynoJedisClient cluster = null;
+			String returnResult = "OK";
 			try{
-				DynoJedisClient cluster = DynomiteClusterConnectionManager.createCluster(clusterName,nodes);
+				cluster = DynomiteClusterConnectionManager.createCluster(clusterName,nodes);
 				cluster.set(DynomiteConfig.TEST_FAILOVER_KEY, DynomiteConfig.TEST_FAILOVER_VALUE);
 				Thread.sleep(2000);
 				String result = cluster.get(DynomiteConfig.TEST_FAILOVER_KEY);
 				cluster.del(DynomiteConfig.TEST_FAILOVER_KEY);
-				cluster.stopClient();
 				if (result == null || ("".equals(result)) || (!DynomiteConfig.TEST_FAILOVER_VALUE.equals(result)) )
-					return "FAIL: get value missmatch! Expected: " + DynomiteConfig.TEST_FAILOVER_VALUE + " GOT: " + result;
+					returnResult = "FAIL: get value missmatch! Expected: " + DynomiteConfig.TEST_FAILOVER_VALUE + " GOT: " + result;
+				
 			}catch(Exception e){
 				System.out.println("Could not Connet on Cluster: " + nodes + " EX: " + e);
-				return "FAIL: " + e.getMessage();
+				returnResult = "FAIL: " + e.getMessage();
+			}finally {
+				if (cluster!=null)
+					cluster.stopClient();
 			}
-			return "OK";
+			return returnResult;
 		}
 		
 		private void insert(String key,String value,String clusterName,DynomiteNodeInfo node,CheckerResponse checkerResponse) {
+			DynoJedisClient cluster = null;
 			try{
-				DynoJedisClient cluster = DynomiteClusterConnectionManager.createSingleNodeCluster(clusterName,node);
+				cluster = DynomiteClusterConnectionManager.createSingleNodeCluster(clusterName,node);
 				double init = System.currentTimeMillis();
 				cluster.set(key, value);
 				double end = System.currentTimeMillis();
 				checkerResponse.setInsertTime((end-init) + " ms");
 				printBench("  Insert " + key + " - Value: " + value,init,end);
-				cluster.stopClient();
 			}catch(Exception e){
 				checkerResponse.cleanUp();
 				checkerResponse.setInsertError(e.getMessage());
+			}finally {
+				if (cluster!=null)
+					cluster.stopClient();
 			}
 		}
 		
 		private String get(String key,String clusterName,DynomiteNodeInfo node,CheckerResponse checkerResponse) {
+			DynoJedisClient cluster = null;
 			try{	
-				DynoJedisClient cluster = DynomiteClusterConnectionManager.createSingleNodeCluster(clusterName,node);
+				cluster = DynomiteClusterConnectionManager.createSingleNodeCluster(clusterName,node);
 				double init = System.currentTimeMillis();
 				String result = cluster.get(key);
 				double end = System.currentTimeMillis();
 				checkerResponse.setGetTime((end-init) + " ms");
 				printBench("  Get: " + key + " ",init,end);
-				cluster.stopClient();
 				return result;
 			}catch(Exception e){
 				checkerResponse.cleanUp();
 				checkerResponse.setGetError((e.getCause().getMessage()));
 				return "ERROR " + e.getMessage();
+			}finally {
+				if (cluster!=null)
+					cluster.stopClient();
 			}
 		}
 		
