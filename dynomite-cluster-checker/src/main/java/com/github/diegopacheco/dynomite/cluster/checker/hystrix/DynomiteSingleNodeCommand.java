@@ -37,9 +37,15 @@ public class DynomiteSingleNodeCommand extends HystrixCommand<Boolean> {
 
     @Override
     protected Boolean run() {
-    	DynoJedisClient cluster = DynomiteClusterConnectionManager.createSingleNodeCluster(clusterName,node);
-		cluster.get("awesomeSbrubles");
-		cluster.stopClient();
+    	DynoJedisClient cluster = null;
+    	try{
+    		cluster = DynomiteClusterConnectionManager.createSingleNodeCluster(clusterName,node);
+    		cluster.get("awesomeSbrubles");
+    	}catch(Exception e){
+    	}finally{
+    		if (cluster!=null)
+    			cluster.stopClient();
+    	}
 		return true;
     }
 	
