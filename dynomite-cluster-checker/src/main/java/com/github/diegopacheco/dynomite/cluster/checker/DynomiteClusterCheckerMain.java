@@ -146,7 +146,7 @@ public class DynomiteClusterCheckerMain {
 				}catch(Exception e){
 					System.out.println("Could not Connet on Node: " + node + " EX: " + e);
 				}finally{
-					Hystrix.reset();
+					//Hystrix.reset();
 				}
 			}
 			return validNodes;
