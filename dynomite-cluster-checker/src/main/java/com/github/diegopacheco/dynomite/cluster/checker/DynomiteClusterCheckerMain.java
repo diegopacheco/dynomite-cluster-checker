@@ -11,6 +11,7 @@ import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteSeedsPars
 import com.github.diegopacheco.dynomite.cluster.checker.util.ListJsonPrinter;
 import com.google.common.collect.Lists;
 import com.netflix.dyno.jedis.DynoJedisClient;
+import com.netflix.hystrix.Hystrix;
 
 /**
  * This utility lass connects to a dynomite cluster and sends data to check if the replication is working.
@@ -144,6 +145,8 @@ public class DynomiteClusterCheckerMain {
 						validNodes.add(node);
 				}catch(Exception e){
 					System.out.println("Could not Connet on Node: " + node + " EX: " + e);
+				}finally{
+					Hystrix.reset();
 				}
 			}
 			return validNodes;
