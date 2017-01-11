@@ -29,9 +29,8 @@ public class DynomiteClusterCheckerMain {
 		public static void main(String[] args){
 			Long init = System.currentTimeMillis();
 			try{
-				String telemetryParam = args[1];
 				String seeds = args[0];
-				Boolean isTelemetryMode = isTelemtryModeSet(telemetryParam) ? new Boolean(telemetryParam) : false;
+				Boolean isTelemetryMode = isTelemtryModeSet(args) ? true : false;
 				DynomiteClusterCheckerMain dcc = new DynomiteClusterCheckerMain();
 				dcc.run(seeds, isTelemetryMode);
 			} finally {
@@ -41,7 +40,10 @@ public class DynomiteClusterCheckerMain {
 			}
 		}
 
-		private static boolean isTelemtryModeSet(String parameter) {
+		private static boolean isTelemtryModeSet(String[] args) {
+			if (args.length < 2) return false;
+
+			String parameter = args[1];
 			return 	(parameter.equalsIgnoreCase("false") || parameter.equalsIgnoreCase("true"));
 		}
 
