@@ -29,18 +29,24 @@ public class DynomiteClusterCheckerMain {
 		public static void main(String[] args){
 			Long init = System.currentTimeMillis();
 			try{
+				String seeds = args[0];
+				Boolean isTelemetryMode = isTelemtryModeSet(args) ? true : false;
 				DynomiteClusterCheckerMain dcc = new DynomiteClusterCheckerMain();
-				//dcc.run(args[0],false);
-				//dcc.run("200.56.0.1:8101:rack1:local-dc:437425602",true);
-				dcc.run("227.0.0.1:8101:rack1:local-dc:437425602|127.0.0.1:8101:rack1:local-dc:437425602",false);
-				//dcc.run("jack.cats.com:8101:rack1:local-dc:437425602",false);
-			}finally {
+				dcc.run(seeds, isTelemetryMode);
+			} finally {
 				Long end = System.currentTimeMillis();
 				System.out.println("--");
 				System.out.println( "TIME TO RUN: " + TimeUnit.MILLISECONDS.toSeconds((end-init)) + " seconds");
 			}
 		}
-		
+
+		private static boolean isTelemtryModeSet(String[] args) {
+			if (args.length < 2) return false;
+
+			String parameter = args[1];
+			return 	(parameter.equalsIgnoreCase("false") || parameter.equalsIgnoreCase("true"));
+		}
+
 		public String run(String seeds,boolean telemetryMode){
 			
 			Long init = System.currentTimeMillis();
