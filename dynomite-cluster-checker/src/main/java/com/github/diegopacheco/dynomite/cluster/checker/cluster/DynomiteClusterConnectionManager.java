@@ -55,6 +55,7 @@ public class DynomiteClusterConnectionManager {
 		DynoJedisClient dynoClient = new DynoJedisClient.Builder()
 					.withApplicationName(DynomiteConfig.CLIENT_NAME)
 		            .withDynomiteClusterName(clusterName)
+		            .withPort(8101)
 		            .withCPConfig( new ArchaiusConnectionPoolConfiguration(DynomiteConfig.CLIENT_NAME)
 		            					//.setLocalRack(node.getRack())
 		            					//.setLocalDataCenter(node.getDc())
@@ -78,6 +79,7 @@ public class DynomiteClusterConnectionManager {
 					.withApplicationName(DynomiteConfig.CLIENT_NAME)
 		            .withDynomiteClusterName(clusterName)
 		            // ConnectionPoolConfigurationImpl
+		            .withPort(8101)
 		            .withCPConfig( new ArchaiusConnectionPoolConfiguration(DynomiteConfig.CLIENT_NAME)
 		            					//.setLocalRack(nodes.get(0).getRack())
 		            					//.setLocalDataCenter(nodes.get(0).getDc())
@@ -100,7 +102,10 @@ public class DynomiteClusterConnectionManager {
 		StringBuilder jsonSB = new StringBuilder("[");
 		int count = 0;
 		for(DynomiteNodeInfo node: nodes){
-			jsonSB.append(" {\"token\":\""+ node.getTokens() + "\",\"hostname\":\"" + node.getServer() + "\",\"zone\":\"" +  node.getDc() + "\"} ");
+			jsonSB.append(" {\"token\":\""+ node.getTokens() 
+			                + "\",\"hostname\":\"" + node.getServer() 
+							+ "\",\"zone\":\"" +  node.getDc() 
+							+ "\"} ");
 			count++;
 			if (count < nodes.size())
 				jsonSB.append(" , ");
@@ -138,7 +143,9 @@ public class DynomiteClusterConnectionManager {
 	}
 	
 	private static Host buildHost(DynomiteNodeInfo node){
-		return new Host(node.getServer(),22222,node.getDc(),Status.Up);
+		Host host = new Host(node.getServer(),22222,Status.Up);
+		host.setRack(node.getDc());
+		return host;
 	}
 	
 	

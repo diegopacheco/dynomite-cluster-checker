@@ -6,22 +6,29 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.github.diegopacheco.dynomite.cluster.checker.DynomiteConfig;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
 import com.netflix.dyno.connectionpool.Host;
+import com.netflix.dyno.connectionpool.Host.Status;
 import com.netflix.dyno.connectionpool.HostSupplier;
 import com.netflix.dyno.connectionpool.TokenMapSupplier;
-import com.netflix.dyno.connectionpool.Host.Status;
 import com.netflix.dyno.connectionpool.impl.RetryNTimes;
 import com.netflix.dyno.connectionpool.impl.lb.AbstractTokenMapSupplier;
 import com.netflix.dyno.contrib.ArchaiusConnectionPoolConfiguration;
 import com.netflix.dyno.jedis.DynoJedisClient;
 
 public class SimpleConnectionTest {
-	
+
+	@Ignore
 	@Test
+	/**
+	 * Should have the same result(connectivity-like) as: 
+ 	 *     ./gradlew execute -Dexec.args="127.0.0.1:8102:rack1:local-dc:100"
+     *
+	 */
 	public void testConnection(){
 		
 		String clusterName = "local-cluster";
@@ -31,6 +38,7 @@ public class SimpleConnectionTest {
 		DynoJedisClient dynoClient = new DynoJedisClient.Builder()
 				.withApplicationName(DynomiteConfig.CLIENT_NAME)
 	            .withDynomiteClusterName(clusterName)
+	            .withPort(8101)
 	            .withCPConfig( new ArchaiusConnectionPoolConfiguration(DynomiteConfig.CLIENT_NAME)
 	            					.withTokenSupplier(toTokenMapSupplier(Arrays.asList(node)))
 	            					.setMaxConnsPerHost(1)
@@ -54,9 +62,8 @@ public class SimpleConnectionTest {
 		StringBuilder jsonSB = new StringBuilder("[");
 		int count = 0;
 		for(DynomiteNodeInfo node: nodes){
-			jsonSB.append(" {\"token\":\""+ node.getTokens() + "\",\"hostname\":\"" + node.getServer() + 
-							"\",\"dc\":\"" +  node.getDc() 
-							+ "\",\"rack\":\"" +  node.getRack()
+			jsonSB.append(" {\"token\":\""+ node.getTokens() 
+			                + "\",\"hostname\":\"" + node.getServer() 
 							+ "\",\"zone\":\"" +  node.getDc()
 							+ "\"} ");
 			count++;
@@ -96,7 +103,9 @@ public class SimpleConnectionTest {
 	}
 	
 	private static Host buildHost(DynomiteNodeInfo node){
-		return new Host(node.getServer(),node.getServer(),8102,node.getRack(),node.getDc(),Status.Up);
+		Host host = new Host(node.getServer(),22222,Status.Up);
+		host.setRack(node.getDc());
+		return host;
 	}
 	
 	
