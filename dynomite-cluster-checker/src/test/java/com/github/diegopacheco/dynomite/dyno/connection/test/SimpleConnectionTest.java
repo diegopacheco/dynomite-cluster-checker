@@ -22,7 +22,7 @@ import com.netflix.dyno.jedis.DynoJedisClient;
 
 public class SimpleConnectionTest {
 
-	//@Ignore
+	@Ignore
 	@Test
 	/**
 	 * Should have the same result(connectivity-like) as: 
