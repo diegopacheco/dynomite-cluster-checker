@@ -8,9 +8,9 @@ import java.util.Set;
 import com.github.diegopacheco.dynomite.cluster.checker.DynomiteConfig;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
 import com.netflix.dyno.connectionpool.Host;
-import com.netflix.dyno.connectionpool.Host.Status;
 import com.netflix.dyno.connectionpool.HostSupplier;
 import com.netflix.dyno.connectionpool.TokenMapSupplier;
+import com.netflix.dyno.connectionpool.Host.Status;
 import com.netflix.dyno.connectionpool.impl.RetryNTimes;
 import com.netflix.dyno.connectionpool.impl.lb.AbstractTokenMapSupplier;
 import com.netflix.dyno.contrib.ArchaiusConnectionPoolConfiguration;
@@ -33,8 +33,8 @@ public class DynomiteClusterConnectionManager {
 			final List<Host> hosts = new ArrayList<Host>();
 			   @Override
 			   public Collection<Host> getHosts() {
-			    hosts.add(new Host(ip, 22222, Status.Up).setRack(node.getDc()));
-			    return hosts;
+			      hosts.add(buildHost(node));
+			      return hosts;
 			   }
 		};
 		
@@ -56,9 +56,8 @@ public class DynomiteClusterConnectionManager {
 					.withApplicationName(DynomiteConfig.CLIENT_NAME)
 		            .withDynomiteClusterName(clusterName)
 		            .withCPConfig( new ArchaiusConnectionPoolConfiguration(DynomiteConfig.CLIENT_NAME)
-		            					.setPort(8101)
-		            					.setLocalRack(node.getRack())
-		            					.setLocalDataCenter(node.getDc())
+		            					//.setLocalRack(node.getRack())
+		            					//.setLocalDataCenter(node.getDc())
 		            					.withTokenSupplier(testTokenMapSupplier)
 		            					.setMaxConnsPerHost(1)
                                         .setConnectTimeout(2000)
@@ -80,7 +79,6 @@ public class DynomiteClusterConnectionManager {
 		            .withDynomiteClusterName(clusterName)
 		            // ConnectionPoolConfigurationImpl
 		            .withCPConfig( new ArchaiusConnectionPoolConfiguration(DynomiteConfig.CLIENT_NAME)
-		            					.setPort(8101)
 		            					//.setLocalRack(nodes.get(0).getRack())
 		            					//.setLocalDataCenter(nodes.get(0).getDc())
 		            					.withTokenSupplier(toTokenMapSupplier(nodes))
@@ -127,7 +125,7 @@ public class DynomiteClusterConnectionManager {
 		final List<Host> hosts = new ArrayList<Host>();
 		
 		for(DynomiteNodeInfo node: nodes){
-			hosts.add(new Host(node.getServer(), 22222, Status.Up).setRack(node.getDc()));
+			hosts.add(buildHost(node));
 		}
 		
 		final HostSupplier customHostSupplier = new HostSupplier() {
@@ -137,6 +135,10 @@ public class DynomiteClusterConnectionManager {
 		   }
 		};
 		return customHostSupplier;
+	}
+	
+	private static Host buildHost(DynomiteNodeInfo node){
+		return new Host(node.getServer(),22222,node.getDc(),Status.Up);
 	}
 	
 	
