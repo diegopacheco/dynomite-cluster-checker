@@ -22,7 +22,7 @@ import com.netflix.dyno.jedis.DynoJedisClient;
 
 public class SimpleConnectionTest {
 
-	@Ignore
+	//@Ignore
 	@Test
 	/**
 	 * Should have the same result(connectivity-like) as: 
@@ -38,7 +38,7 @@ public class SimpleConnectionTest {
 		DynoJedisClient dynoClient = new DynoJedisClient.Builder()
 				.withApplicationName(DynomiteConfig.CLIENT_NAME)
 	            .withDynomiteClusterName(clusterName)
-	            .withPort(8101)
+	            //.withPort(8101)
 	            .withCPConfig( new ArchaiusConnectionPoolConfiguration(DynomiteConfig.CLIENT_NAME)
 	            					.withTokenSupplier(toTokenMapSupplier(Arrays.asList(node)))
 	            					.setMaxConnsPerHost(1)
@@ -103,8 +103,8 @@ public class SimpleConnectionTest {
 	}
 	
 	private static Host buildHost(DynomiteNodeInfo node){
-		Host host = new Host(node.getServer(),22222,Status.Up);
-		host.setRack(node.getDc());
+		Host host = new Host(node.getServer(),8102,node.getDc());
+		host.setStatus(Status.Up);
 		return host;
 	}
 	

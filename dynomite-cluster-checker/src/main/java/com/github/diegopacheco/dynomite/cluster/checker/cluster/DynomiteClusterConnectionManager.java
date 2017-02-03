@@ -55,7 +55,7 @@ public class DynomiteClusterConnectionManager {
 		DynoJedisClient dynoClient = new DynoJedisClient.Builder()
 					.withApplicationName(DynomiteConfig.CLIENT_NAME)
 		            .withDynomiteClusterName(clusterName)
-		            .withPort(8101)
+		            //.withPort(8101)
 		            .withCPConfig( new ArchaiusConnectionPoolConfiguration(DynomiteConfig.CLIENT_NAME)
 		            					//.setLocalRack(node.getRack())
 		            					//.setLocalDataCenter(node.getDc())
@@ -79,7 +79,7 @@ public class DynomiteClusterConnectionManager {
 					.withApplicationName(DynomiteConfig.CLIENT_NAME)
 		            .withDynomiteClusterName(clusterName)
 		            // ConnectionPoolConfigurationImpl
-		            .withPort(8101)
+		            //.withPort(8101)
 		            .withCPConfig( new ArchaiusConnectionPoolConfiguration(DynomiteConfig.CLIENT_NAME)
 		            					//.setLocalRack(nodes.get(0).getRack())
 		            					//.setLocalDataCenter(nodes.get(0).getDc())
@@ -143,8 +143,8 @@ public class DynomiteClusterConnectionManager {
 	}
 	
 	private static Host buildHost(DynomiteNodeInfo node){
-		Host host = new Host(node.getServer(),22222,Status.Up);
-		host.setRack(node.getDc());
+		Host host = new Host(node.getServer(),8102,node.getDc());
+		host.setStatus(Status.Up);
 		return host;
 	}
 	
