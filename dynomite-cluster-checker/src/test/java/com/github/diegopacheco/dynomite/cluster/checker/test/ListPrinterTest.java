@@ -1,5 +1,7 @@
-package com.github.diegopacheco.dynomite.cluster.checker;
+package com.github.diegopacheco.dynomite.cluster.checker.test;
 
+import com.github.diegopacheco.dynomite.cluster.checker.CheckerResponse;
+import com.github.diegopacheco.dynomite.cluster.checker.ResultReport;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
 import com.github.diegopacheco.dynomite.cluster.checker.util.ListJsonPrinter;
 import com.google.common.collect.Lists;

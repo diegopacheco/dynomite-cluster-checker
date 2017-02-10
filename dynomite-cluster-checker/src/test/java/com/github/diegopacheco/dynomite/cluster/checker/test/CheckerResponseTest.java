@@ -1,6 +1,9 @@
-package com.github.diegopacheco.dynomite.cluster.checker;
+package com.github.diegopacheco.dynomite.cluster.checker.test;
 
 import org.junit.Test;
+
+import com.github.diegopacheco.dynomite.cluster.checker.CheckerResponse;
+
 import static org.junit.Assert.assertTrue;
 
 public class CheckerResponseTest {

@@ -8,9 +8,10 @@ import java.util.Set;
 import com.github.diegopacheco.dynomite.cluster.checker.DynomiteConfig;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
 import com.netflix.dyno.connectionpool.Host;
-import com.netflix.dyno.connectionpool.Host.Status;
 import com.netflix.dyno.connectionpool.HostSupplier;
 import com.netflix.dyno.connectionpool.TokenMapSupplier;
+import com.netflix.dyno.connectionpool.Host.Status;
+import com.netflix.dyno.connectionpool.impl.RetryNTimes;
 import com.netflix.dyno.connectionpool.impl.lb.AbstractTokenMapSupplier;
 import com.netflix.dyno.contrib.ArchaiusConnectionPoolConfiguration;
 import com.netflix.dyno.jedis.DynoJedisClient;
@@ -32,8 +33,8 @@ public class DynomiteClusterConnectionManager {
 			final List<Host> hosts = new ArrayList<Host>();
 			   @Override
 			   public Collection<Host> getHosts() {
-			    hosts.add(new Host(ip, 22222, Status.Up).setRack(node.getDc()));
-			    return hosts;
+			      hosts.add(buildHost(node));
+			      return hosts;
 			   }
 		};
 		
@@ -54,11 +55,20 @@ public class DynomiteClusterConnectionManager {
 		DynoJedisClient dynoClient = new DynoJedisClient.Builder()
 					.withApplicationName(DynomiteConfig.CLIENT_NAME)
 		            .withDynomiteClusterName(clusterName)
+		            //.withPort(8101)
 		            .withCPConfig( new ArchaiusConnectionPoolConfiguration(DynomiteConfig.CLIENT_NAME)
-		            					.setPort(8101)
-		            					.setLocalRack(node.getDc())
+		            					//.setLocalRack(node.getRack())
+		            					//.setLocalDataCenter(node.getDc())
 		            					.withTokenSupplier(testTokenMapSupplier)
-		            					.setMaxConnsPerHost(100) )
+		            					.setMaxConnsPerHost(1)
+                                        .setConnectTimeout(2000)
+                                        //.setPoolShutdownDelay(0)
+                                        //.setFailOnStartupIfNoHosts(true)
+                                        //.setFailOnStartupIfNoHostsSeconds(4)
+                                        //.setMaxTimeoutWhenExhausted(4)
+                                        //.setSocketTimeout(4)
+                                        .setRetryPolicyFactory(new RetryNTimes.RetryFactory(1))
+		            )
 		            .withHostSupplier(customHostSupplier)
 		            .build();
 		return dynoClient;
@@ -68,10 +78,21 @@ public class DynomiteClusterConnectionManager {
 		DynoJedisClient dynoClient = new DynoJedisClient.Builder()
 					.withApplicationName(DynomiteConfig.CLIENT_NAME)
 		            .withDynomiteClusterName(clusterName)
+		            // ConnectionPoolConfigurationImpl
+		            //.withPort(8101)
 		            .withCPConfig( new ArchaiusConnectionPoolConfiguration(DynomiteConfig.CLIENT_NAME)
-		            					.setPort(8101)
+		            					//.setLocalRack(nodes.get(0).getRack())
+		            					//.setLocalDataCenter(nodes.get(0).getDc())
 		            					.withTokenSupplier(toTokenMapSupplier(nodes))
-		            					.setMaxConnsPerHost(100) )
+		            					.setMaxConnsPerHost(1)
+                                        .setConnectTimeout(2000)
+                                        .setPoolShutdownDelay(0)
+                                        .setFailOnStartupIfNoHosts(true)
+                                        .setFailOnStartupIfNoHostsSeconds(2)
+                                        .setMaxTimeoutWhenExhausted(2000)
+                                        .setSocketTimeout(2000)
+                                        .setRetryPolicyFactory(new RetryNTimes.RetryFactory(1))
+		            )
 		            .withHostSupplier(toHostSupplier(nodes))
 		            .build();
 		return dynoClient;
@@ -81,7 +102,10 @@ public class DynomiteClusterConnectionManager {
 		StringBuilder jsonSB = new StringBuilder("[");
 		int count = 0;
 		for(DynomiteNodeInfo node: nodes){
-			jsonSB.append(" {\"token\":\""+ node.getTokens() + "\",\"hostname\":\"" + node.getServer() + "\",\"zone\":\"" +  node.getDc() + "\"} ");
+			jsonSB.append(" {\"token\":\""+ node.getTokens() 
+			                + "\",\"hostname\":\"" + node.getServer() 
+							+ "\",\"zone\":\"" +  node.getDc() 
+							+ "\"} ");
 			count++;
 			if (count < nodes.size())
 				jsonSB.append(" , ");
@@ -106,7 +130,7 @@ public class DynomiteClusterConnectionManager {
 		final List<Host> hosts = new ArrayList<Host>();
 		
 		for(DynomiteNodeInfo node: nodes){
-			hosts.add(new Host(node.getServer(), 22222, Status.Up).setRack(node.getDc()));
+			hosts.add(buildHost(node));
 		}
 		
 		final HostSupplier customHostSupplier = new HostSupplier() {
@@ -116,6 +140,12 @@ public class DynomiteClusterConnectionManager {
 		   }
 		};
 		return customHostSupplier;
+	}
+	
+	private static Host buildHost(DynomiteNodeInfo node){
+		Host host = new Host(node.getServer(),8102,node.getDc());
+		host.setStatus(Status.Up);
+		return host;
 	}
 	
 	

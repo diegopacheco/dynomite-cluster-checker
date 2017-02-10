@@ -88,6 +88,7 @@ public class CheckerResponse implements JsonPrinter {
 		this.getError = getError;
 	}
 	
+	
 	public void cleanUp(){
 		setInsertTime(null);
 		setGetTime(null);
@@ -123,11 +124,15 @@ public class CheckerResponse implements JsonPrinter {
 				pritIfNotNull("    \"server\":\""  + server + "\",\r\n",server) +
 				pritIfNotNull("    \"seeds\":\"" + seeds + "\",\r\n",seeds) +
 				pritIfNotNull("    \"insertTime\":\"" + getInsertTime(insertTime)  + "\",\r\n",insertTime) +
-				pritIfNotNull("    \"getTime\":\""    + new Double(getTime.replace("ms", "").trim()).intValue() + "\",\r\n",getTime) +
+				pritIfNotNull("    \"getTime\":\""    + new Double(getTime().replace("ms", "").trim()).intValue() + "\",\r\n",getTime) +
 				pritIfNotNull("    \"insertError\":\""  + resolveErrorTelemetry(insertError) + "\",\r\n",resolveErrorTelemetry(insertError)) +
 				pritIfNotNull("    \"getError\":\""     + resolveErrorTelemetry(getError) + "\",\r\n",resolveErrorTelemetry(getError))       +
 				"    \"consistency\":\""  + resolveBoolean(consistency) + "\"\r\n" +
 				"  }";
+	}
+
+	private String getTime() {
+		return getTime == null ? "0" : getTime;
 	}
 
 	private int getInsertTime(String insertTime)  {
