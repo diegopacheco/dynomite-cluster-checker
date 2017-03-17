@@ -21,7 +21,7 @@ public class DynomiteSingleNodeCommand extends HystrixCommand<Boolean> {
                 	   .withExecutionTimeoutEnabled(true)
                 	   .withExecutionIsolationThreadInterruptOnTimeout(true)
                 	   .withExecutionIsolationStrategy(ExecutionIsolationStrategy.THREAD)
-                       .withExecutionTimeoutInMilliseconds(10000)
+                       .withExecutionTimeoutInMilliseconds(15000)
                     )
         );
         
