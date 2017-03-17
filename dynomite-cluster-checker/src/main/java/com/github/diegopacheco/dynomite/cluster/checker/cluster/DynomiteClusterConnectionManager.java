@@ -61,7 +61,7 @@ public class DynomiteClusterConnectionManager {
 		            					//.setLocalDataCenter(node.getDc())
 		            					.withTokenSupplier(testTokenMapSupplier)
 		            					.setMaxConnsPerHost(1)
-                                        .setConnectTimeout(2000)
+                                        .setConnectTimeout(5000)
                                         //.setPoolShutdownDelay(0)
                                         //.setFailOnStartupIfNoHosts(true)
                                         //.setFailOnStartupIfNoHostsSeconds(4)
