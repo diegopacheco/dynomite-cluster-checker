@@ -29,7 +29,7 @@ public class DynomiteClusterCheckerMain {
 	public static void main(String[] args) {
 		Long init = System.currentTimeMillis();
 		try {
-			String seeds = args[0];
+			String seeds = extractSeeds(args);
 			Boolean isTelemetryMode = isTelemtryModeSet(args) ? true : false;
 			DynomiteClusterCheckerMain dcc = new DynomiteClusterCheckerMain();
 			dcc.run(seeds, isTelemetryMode);
@@ -38,6 +38,15 @@ public class DynomiteClusterCheckerMain {
 			System.out.println("--");
 			System.out.println("TIME TO RUN: " + TimeUnit.MILLISECONDS.toSeconds((end - init)) + " seconds");
 		}
+	}
+
+	private static String extractSeeds(String[] args) {
+		if (null==args[0]) return null;
+		String seeds = args[0];
+		seeds = seeds.replaceAll("\r", "");
+		seeds = seeds.replaceAll("\n", "");
+		seeds = seeds.replaceAll(" ", "");
+		return seeds;
 	}
 
 	private static boolean isTelemtryModeSet(String[] args) {
