@@ -26,7 +26,12 @@ public class DCCConnectionManager {
 
 	public static DynoJedisClient createCluster(String clusterName,final List<DynomiteNodeInfo> nodes){
 		
-		ConfigurationManager.getConfigInstance().setProperty("dyno." + clusterName + ".retryPolicy","RetryNTimes:3:true");
+		if (nodes.get(0)!=null){
+			ConfigurationManager.getConfigInstance().setProperty("EC2_AVAILABILITY_ZONE",nodes.get(0).getRack());
+			ConfigurationManager.getConfigInstance().setProperty("EC2_REGION",nodes.get(0).getRack());
+		}
+
+		ConfigurationManager.getConfigInstance().setProperty("dyno." + clusterName + ".retryPolicy","RetryNTimes:1:true");
 		
 		DynoJedisClient dynoClient = new DynoJedisClient.Builder().withApplicationName(clusterName)
 		.withDynomiteClusterName(clusterName)
@@ -34,8 +39,8 @@ public class DCCConnectionManager {
 				new ArchaiusConnectionPoolConfiguration(clusterName)
 					.withTokenSupplier(TokenMapSupplierFactory.build(nodes))
 					.setMaxConnsPerHost(1)
-					.setConnectTimeout(5000)
-				    .setRetryPolicyFactory(new RetryNTimes.RetryFactory(3,true))
+					//.setConnectTimeout(5000)
+				    .setRetryPolicyFactory(new RetryNTimes.RetryFactory(1,true))
 		)
 		.withHostSupplier(HostSupplierFactory.build(nodes))
 		.build();

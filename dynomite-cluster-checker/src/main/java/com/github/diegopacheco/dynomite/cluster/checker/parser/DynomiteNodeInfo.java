@@ -2,6 +2,7 @@ package com.github.diegopacheco.dynomite.cluster.checker.parser;
 
 import com.netflix.dyno.connectionpool.Host;
 import com.netflix.dyno.connectionpool.Host.Status;
+import com.netflix.dyno.jedis.DynoJedisClient;
 
 /**
  * Represents a Dynomite Seed Node Configuration
@@ -18,6 +19,7 @@ public class DynomiteNodeInfo {
 	private String rack;
 	private String dc;
 	private String tokens;
+	private DynoJedisClient nodeClient;
 	
 	public DynomiteNodeInfo() {}
 
@@ -85,6 +87,13 @@ public class DynomiteNodeInfo {
 		this.tokens = tokens;
 	}
 	
+	public DynoJedisClient getNodeClient() {
+		return nodeClient;
+	}
+	public void setNodeClient(DynoJedisClient nodeClient) {
+		this.nodeClient = nodeClient;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

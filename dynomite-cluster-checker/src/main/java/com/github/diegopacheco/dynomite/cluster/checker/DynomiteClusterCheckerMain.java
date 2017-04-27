@@ -8,6 +8,7 @@ import com.github.diegopacheco.dynomite.cluster.checker.cluster.DCCConnectionMan
 import com.github.diegopacheco.dynomite.cluster.checker.hystrix.DynomiteSingleNodeCommand;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteSeedsParser;
+import com.github.diegopacheco.dynomite.cluster.checker.tasks.DCCTaskExecutionEngine;
 import com.github.diegopacheco.dynomite.cluster.checker.util.ListJsonPrinter;
 import com.google.common.collect.Lists;
 import com.netflix.dyno.jedis.DynoJedisClient;
@@ -31,12 +32,16 @@ public class DynomiteClusterCheckerMain {
 		try {
 			String seeds = extractSeeds(args);
 			Boolean isTelemetryMode = isTelemtryModeSet(args) ? true : false;
-			DynomiteClusterCheckerMain dcc = new DynomiteClusterCheckerMain();
-			dcc.run(seeds, isTelemetryMode);
+			//DynomiteClusterCheckerMain dcc = new DynomiteClusterCheckerMain();
+			//dcc.run(seeds, isTelemetryMode);
+			
+			System.out.println(new DCCTaskExecutionEngine().run(seeds, isTelemetryMode));
+			
 		} finally {
 			Long end = System.currentTimeMillis();
 			System.out.println("--");
 			System.out.println("TIME TO RUN: " + TimeUnit.MILLISECONDS.toSeconds((end - init)) + " seconds");
+			System.exit(0);
 		}
 	}
 
