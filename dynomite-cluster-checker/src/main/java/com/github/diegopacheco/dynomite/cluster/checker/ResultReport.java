@@ -91,7 +91,6 @@ public class ResultReport {
 
 	@Override
 	public String toString() {
-		return "ResultReport [failoverStatus=" + failoverStatus + ", nodesReport=" + nodesReport + ", badNodes="
-				+ badNodes + "]";
+		return "ResultReport [failoverStatus=" + failoverStatus + ", nodesReport=" + nodesReport + ", badNodes=" + badNodes + "]";
 	}
 }

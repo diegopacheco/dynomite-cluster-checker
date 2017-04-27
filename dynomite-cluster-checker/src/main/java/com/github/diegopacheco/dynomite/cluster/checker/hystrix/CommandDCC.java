@@ -1,7 +1,6 @@
 package com.github.diegopacheco.dynomite.cluster.checker.hystrix;
 
 import com.github.diegopacheco.dynomite.cluster.checker.DynomiteClusterCheckerMain;
-import com.netflix.config.ConfigurationManager;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
@@ -26,10 +25,6 @@ public class CommandDCC extends HystrixCommand<String> {
         
         this.seeds = seeds;
         this.isTelemetryMode = isTelemetryMode;
-        
-//        ConfigurationManager.getConfigInstance().setProperty(
-//        		  "hystrix.command.DCCGroup.execution.isolation.thread.timeoutInMilliseconds", 
-//        		  30000);
     }
     
     @Override

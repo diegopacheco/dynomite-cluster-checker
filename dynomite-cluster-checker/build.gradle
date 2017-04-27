@@ -67,10 +67,6 @@ dependencies {
 	}		    
 }
 
-//httpPort = 7766
-///stopPort = 7765
-//stopKey = "stopKey"
-
 jar {
 	from(configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }) {
 		exclude "META-INF/*.SF"
@@ -92,7 +88,6 @@ jar {
 // ./gradlew execute -Dexec.args="local"
 // ./gradlew execute -Dexec.args="127.0.0.1:8102:rack1:localdc:1383429731"
 // ./gradlew execute -Dexec.args="127.0.0.1:8102:rack1:localdc:1383429731|127.0.0.1:8102:rack1:localdc:1383429731|127.0.0.1:8102:rack1:localdc:1383429731"
-// ./gradlew execute -Dexec.args="127.0.0.1:8102:rack1:localdc:1383429731|127.0.0.1:8102:rack1:localdc:1383429731|127.011.1:8102:rack1:localdc:1383429731"
 //
 task execute(type:JavaExec) {
 	main = mainClassName

@@ -108,27 +108,27 @@ public class CheckerResponse implements JsonPrinter {
 	}
 	
 	public String toPrettyJson(){
-		return "  {\r\n"  + 
+		return  pritIfNotNull("  {\r\n",boolToString(true))  + 
 				pritIfNotNull("    \"server\":\""  + server + "\",\r\n",server) +
 				pritIfNotNull("    \"seeds\":\"" + seeds + "\",\r\n",seeds) +
 				pritIfNotNull("    \"insertTime\":\"" + insertTime + "\",\r\n",insertTime) +
 				pritIfNotNull("    \"getTime\":\""    + getTime + "\",\r\n",getTime) +
-				pritIfNotNull("    \"insertError\":\""  + insertError + "\",",insertError) +
-				pritIfNotNull("    \"getError\":\""     + getError + "\",",getError)       +
-				"    \"consistency\":\""  + consistency + "\"\r\n" +
-				"  }";
+				pritIfNotNull("    \"insertError\":\""  + insertError + "\", \r\n",insertError) +
+				pritIfNotNull("    \"getError\":\""     + getError + "\", \r\n ",getError)       +
+				pritIfNotNull("    \"consistency\":\""  + consistency + "\"\r\n,",boolToString(consistency))  +
+				pritIfNotNull("  }",boolToString(true));
 	}
 	
 	public String toPrettyTelemetryJson(){
-		return "  {\r\n"  + 
+		return  pritIfNotNull("  {\r\n",boolToString(true))  + 
 				pritIfNotNull("    \"server\":\""  + server + "\",\r\n",server) +
 				pritIfNotNull("    \"seeds\":\"" + seeds + "\",\r\n",seeds) +
 				pritIfNotNull("    \"insertTime\":\"" + getInsertTime(insertTime)  + "\",\r\n",insertTime) +
 				pritIfNotNull("    \"getTime\":\""    + new Double(getTime().replace("ms", "").trim()).intValue() + "\",\r\n",getTime) +
 				pritIfNotNull("    \"insertError\":\""  + resolveErrorTelemetry(insertError) + "\",\r\n",resolveErrorTelemetry(insertError)) +
 				pritIfNotNull("    \"getError\":\""     + resolveErrorTelemetry(getError) + "\",\r\n",resolveErrorTelemetry(getError))       +
-				"    \"consistency\":\""  + resolveBoolean(consistency) + "\"\r\n" +
-				"  }";
+				pritIfNotNull("    \"consistency\":\""  + resolveBoolean(consistency) + "\"\r\n" ,boolToString(consistency))  +
+				pritIfNotNull("  }",boolToString(true));
 	}
 
 	private String getTime() {
@@ -141,6 +141,10 @@ public class CheckerResponse implements JsonPrinter {
 
 	private int resolveBoolean(boolean bol){
 		return (bol) ? 0 : 1;
+	}
+	
+	private String boolToString(boolean bol){
+		return (bol) ? "true" : "false";
 	}
 	
 	private String pritIfNotNull(String msg,String field){
