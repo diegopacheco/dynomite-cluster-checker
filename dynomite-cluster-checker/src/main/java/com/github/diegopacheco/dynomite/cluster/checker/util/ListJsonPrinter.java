@@ -3,7 +3,7 @@ package com.github.diegopacheco.dynomite.cluster.checker.util;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.github.diegopacheco.dynomite.cluster.checker.ExecutionReport;
+import com.github.diegopacheco.dynomite.cluster.checker.context.ExecutionReport;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
 
 /**

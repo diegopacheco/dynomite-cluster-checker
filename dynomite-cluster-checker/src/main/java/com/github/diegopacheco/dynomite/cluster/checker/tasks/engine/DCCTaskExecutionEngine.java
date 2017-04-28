@@ -1,9 +1,16 @@
-package com.github.diegopacheco.dynomite.cluster.checker.tasks;
+package com.github.diegopacheco.dynomite.cluster.checker.tasks.engine;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import com.github.diegopacheco.dynomite.cluster.checker.context.ExecutionContext;
+import com.github.diegopacheco.dynomite.cluster.checker.tasks.CheckClusterFailoverTask;
+import com.github.diegopacheco.dynomite.cluster.checker.tasks.CheckDataReplicationTask;
+import com.github.diegopacheco.dynomite.cluster.checker.tasks.CheckNodesConnectivityTask;
+import com.github.diegopacheco.dynomite.cluster.checker.tasks.CleanUpTask;
+import com.github.diegopacheco.dynomite.cluster.checker.tasks.GetJsonReportResultTask;
+import com.github.diegopacheco.dynomite.cluster.checker.tasks.SetupTask;
+import com.github.diegopacheco.dynomite.cluster.checker.tasks.Task;
 import com.github.diegopacheco.dynomite.cluster.checker.util.Chronometer;
 
 /**
@@ -27,6 +34,7 @@ public class DCCTaskExecutionEngine {
 		tasks.add(new SetupTask());
 		tasks.add(new CheckNodesConnectivityTask());
 		tasks.add(new CheckDataReplicationTask());
+		tasks.add(new CheckClusterFailoverTask());
 		tasks.add(new CleanUpTask());
 		
 		for(Task t : tasks){
@@ -34,15 +42,10 @@ public class DCCTaskExecutionEngine {
 		}
 		
 		stopWatch.stop();
-		
 		ec.getExecutionReport().setTimeToRun(stopWatch.getDiffAsString());
+		
 		new GetJsonReportResultTask().execute(ec);
-
 		return ec.getExecutionReport().getJsonResult();
 	}
-	
-	public static void main(String[] args) {
-		System.out.println(new DCCTaskExecutionEngine().run("172.18.0.101:8101:rack1:dc:100|172.18.0.102:8101:rack2:dc:100|172.18.0.104:8101:rack3:dc:100", false));
-	}
-	
+
 }

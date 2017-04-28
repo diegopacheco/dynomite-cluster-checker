@@ -31,6 +31,10 @@ public class Chronometer {
 		return getDiffAsLong() + "";
 	}
 	
+	public String getDiffAsSecondsString(){
+		return "TIME TO RUN: " + getDiffAsLong() + " seconds";
+	}
+	
 	@Override
 	public String toString() {
 		return "Start: " + init + ", End: " + end + " - DIFF: " + getDiffAsString();

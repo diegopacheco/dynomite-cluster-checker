@@ -3,10 +3,10 @@ package com.github.diegopacheco.dynomite.cluster.checker.tasks;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.diegopacheco.dynomite.cluster.checker.DynomiteConfig;
 import com.github.diegopacheco.dynomite.cluster.checker.cluster.DCCConnectionManager;
 import com.github.diegopacheco.dynomite.cluster.checker.context.ExecutionContext;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
+import com.github.diegopacheco.dynomite.cluster.config.DynomiteConfig;
 import com.google.common.collect.Lists;
 import com.netflix.dyno.jedis.DynoJedisClient;
 
@@ -24,6 +24,10 @@ public class CheckNodesConnectivityTask implements Task {
 		List<DynomiteNodeInfo> onlineNodes = checkNodeConnectivity(ec);
 		getOfflineNodes(ec, onlineNodes);
 		connectWholeCluster(ec);
+		
+		if (ec.getOfflineNodes() != null && ec.getOfflineNodes().size() >= 1) {
+			ec.getExecutionReport().setOfflineNodes(ec.getOfflineNodes());
+		}
 
 	}
 

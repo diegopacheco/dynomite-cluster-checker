@@ -3,7 +3,6 @@ package com.github.diegopacheco.dynomite.cluster.checker.context;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.diegopacheco.dynomite.cluster.checker.ExecutionReport;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
 import com.netflix.dyno.jedis.DynoJedisClient;
 

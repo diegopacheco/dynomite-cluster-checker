@@ -1,4 +1,4 @@
-package com.github.diegopacheco.dynomite.cluster.checker;
+package com.github.diegopacheco.dynomite.cluster.checker.context;
 
 import com.github.diegopacheco.dynomite.cluster.checker.util.JsonPrinter;
 
@@ -16,7 +16,9 @@ public class NodeCheckerResponse implements JsonPrinter {
 	private String seeds;
 	private String insertTime;
 	private String getTime;
+	
 	private boolean consistency = false;
+	private Integer replicationCount = 0;
 	
 	private String insertError = null;
 	private String getError = null;
@@ -88,7 +90,13 @@ public class NodeCheckerResponse implements JsonPrinter {
 		this.getError = getError;
 	}
 	
-	
+	public int getReplicationCount() {
+		return replicationCount;
+	}
+	public void setReplicationCount(int replicationCount) {
+		this.replicationCount = replicationCount;
+	}
+
 	public void cleanUp(){
 		setInsertTime(null);
 		setGetTime(null);
@@ -97,6 +105,7 @@ public class NodeCheckerResponse implements JsonPrinter {
 		setServer("");
 		setGetError("");
 		setInsertError("");
+		setReplicationCount(0);
 	}
 	
 	public String toJson(){
@@ -107,7 +116,8 @@ public class NodeCheckerResponse implements JsonPrinter {
 					"\"getTime\":\""      + getTime + "\"," +
 					"\"insertError\":\""  + insertError + "\"," +
 					"\"getError\":\""     + getError + "\"," +
-					"\"consistency\":\""  + consistency + "\"" +
+					"\"consistency\":\""  + consistency + ",\"" +
+					"\"replicationCount\":\""  + replicationCount + "\"" +
 				"}";
 	}
 	
@@ -119,6 +129,7 @@ public class NodeCheckerResponse implements JsonPrinter {
 				pritIfNotNull("    \"getTime\":\""    + getTime + "\",\r\n",getTime) +
 				pritIfNotNull("    \"insertError\":\""  + insertError + "\", \r\n",insertError) +
 				pritIfNotNull("    \"getError\":\""     + getError + "\", \r\n ",getError)       +
+				pritIfNotNull("    \"replicationCount\":\""     + replicationCount + "\", \r\n ",replicationCount.toString())       +
 				pritIfNotNull("    \"consistency\":\""  + consistency + "\"\r\n,",boolToString(consistency))  +
 				pritIfNotNull("  }",boolToString(true));
 	}
@@ -131,6 +142,7 @@ public class NodeCheckerResponse implements JsonPrinter {
 				pritIfNotNull("    \"getTime\":\""    + new Double(getTime().replace("ms", "").trim()).intValue() + "\",\r\n",getTime) +
 				pritIfNotNull("    \"insertError\":\""  + resolveErrorTelemetry(insertError) + "\",\r\n",resolveErrorTelemetry(insertError)) +
 				pritIfNotNull("    \"getError\":\""     + resolveErrorTelemetry(getError) + "\",\r\n",resolveErrorTelemetry(getError))       +
+				pritIfNotNull("    \"replicationCount\":\""     + replicationCount + "\", \r\n ",replicationCount.toString())       +
 				pritIfNotNull("    \"consistency\":\""  + resolveBoolean(consistency) + "\"\r\n" ,boolToString(consistency))  +
 				pritIfNotNull("  }",boolToString(true));
 	}

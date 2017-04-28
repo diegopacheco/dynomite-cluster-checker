@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import com.github.diegopacheco.dynomite.cluster.checker.hystrix.CommandDCC;
+import com.github.diegopacheco.dynomite.cluster.checker.tasks.engine.DCCTaskExecutionEngine;
 import com.netflix.hystrix.Hystrix;
 
 @SuppressWarnings("serial")
@@ -32,8 +32,9 @@ public class RestServlet extends HttpServlet {
 			boolean shouldRunTelemetryMode = resolveTelemetryMode(req.getParameterValues("telemetry"));
 			logArgs(req);
 			
-			String json = new CommandDCC(seeds,shouldRunTelemetryMode).execute();
+			String json = new DCCTaskExecutionEngine().run(seeds, shouldRunTelemetryMode);
 			out.write(json);
+			
 		}catch(Exception e){
 			logger.error(e); 
 			out.write("{ \"Error\": \"" + e.toString() + " - " + org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(e) + "\" }");

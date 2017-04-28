@@ -2,7 +2,7 @@ package com.github.diegopacheco.dynomite.cluster.checker.test;
 
 import org.junit.Test;
 
-import com.github.diegopacheco.dynomite.cluster.checker.NodeCheckerResponse;
+import com.github.diegopacheco.dynomite.cluster.checker.context.NodeCheckerResponse;
 
 import static org.junit.Assert.assertTrue;
 

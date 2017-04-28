@@ -1,9 +1,9 @@
 package com.github.diegopacheco.dynomite.cluster.checker.tasks;
 
-import com.github.diegopacheco.dynomite.cluster.checker.DynomiteConfig;
 import com.github.diegopacheco.dynomite.cluster.checker.context.ExecutionContext;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
 import com.github.diegopacheco.dynomite.cluster.checker.util.QuietThread;
+import com.github.diegopacheco.dynomite.cluster.config.DynomiteConfig;
 
 /**
  * CleanUpTask this task will clean up all previous dynomite tasks side effects 

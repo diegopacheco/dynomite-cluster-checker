@@ -1,10 +1,10 @@
 package com.github.diegopacheco.dynomite.cluster.checker.tasks;
 
-import com.github.diegopacheco.dynomite.cluster.checker.DynomiteConfig;
-import com.github.diegopacheco.dynomite.cluster.checker.NodeCheckerResponse;
 import com.github.diegopacheco.dynomite.cluster.checker.context.ExecutionContext;
+import com.github.diegopacheco.dynomite.cluster.checker.context.NodeCheckerResponse;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
 import com.github.diegopacheco.dynomite.cluster.checker.util.Chronometer;
+import com.github.diegopacheco.dynomite.cluster.config.DynomiteConfig;
 
 /**
  * CheckDataReplicationTask verify if all dynomite is doing data replciation properly. 
