@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.github.diegopacheco.dynomite.cluster.checker.tasks.engine.DCCTaskExecutionEngine;
-import com.netflix.hystrix.Hystrix;
 
 @SuppressWarnings("serial")
 public class RestServlet extends HttpServlet {
@@ -39,7 +38,6 @@ public class RestServlet extends HttpServlet {
 			logger.error(e); 
 			out.write("{ \"Error\": \"" + e.toString() + " - " + org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(e) + "\" }");
 		}finally {
-			Hystrix.reset();
 			out.close();
 		}
 	}
