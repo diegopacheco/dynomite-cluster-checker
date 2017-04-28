@@ -1,7 +1,9 @@
 package com.github.diegopacheco.dynomite.cluster.checker.context;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.github.diegopacheco.dynomite.cluster.checker.ExecutionReport;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
 import com.netflix.dyno.jedis.DynoJedisClient;
 
@@ -16,14 +18,13 @@ public class ExecutionContext {
 	private String rawSeeds = ""; 
 	private Boolean isTelemetryMode = false;
 	
-	private List<DynomiteNodeInfo> originalNodes;
-	private List<DynomiteNodeInfo> onlineNodes;
-	private List<DynomiteNodeInfo> offlineNodes;
+	private List<DynomiteNodeInfo> originalNodes = new ArrayList<>();
+	private List<DynomiteNodeInfo> onlineNodes   = new ArrayList<>();
+	private List<DynomiteNodeInfo> offlineNodes  = new ArrayList<>();
 	
-	private DynoJedisClient wholeClusterClient;
+	private DynoJedisClient wholeClusterClient   =  null;
 	
-	private String timeToRunDCC;
-	private String jsonResult;
+	private ExecutionReport executionReport = new ExecutionReport();
 	
 	public ExecutionContext() {}
 
@@ -71,18 +72,11 @@ public class ExecutionContext {
 		this.wholeClusterClient = wholeClusterClient;
 	}
 
-	public String getJsonResult() {
-		return jsonResult;
+	public ExecutionReport getExecutionReport() {
+		return executionReport;
 	}
-	public void setJsonResult(String jsonResult) {
-		this.jsonResult = jsonResult;
-	}
-
-	public String getTimeToRunDCC() {
-		return timeToRunDCC;
-	}
-	public void setTimeToRunDCC(String timeToRunDCC) {
-		this.timeToRunDCC = timeToRunDCC;
+	public void setExecutionReport(ExecutionReport executionReport) {
+		this.executionReport = executionReport;
 	}
 	
 }

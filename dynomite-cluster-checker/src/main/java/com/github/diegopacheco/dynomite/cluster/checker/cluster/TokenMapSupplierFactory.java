@@ -61,19 +61,19 @@ public class TokenMapSupplierFactory {
 				public String getTopologyJsonPayload(Set<Host> activeHosts) {
 					return json;
 				}
-				@Override
-				public List<HostToken> getTokens(Set<Host> activeHosts) {
-					List<HostToken> tokens = new ArrayList<>();
-					for(DynomiteNodeInfo node: nodes){
-						tokens.add(new HostToken(new Long(node.getTokens()), node.toHOST()));
-					}
-					return tokens;
-				}
-				@Override
-				public HostToken getTokenForHost(Host host, Set<Host> activeHosts) {
-					DynomiteNodeInfo dni = mapNodes.get(host.getHostName());
-					return new HostToken(new Long(dni.getTokens()), dni.toHOST());
-				}
+//				@Override
+//				public List<HostToken> getTokens(Set<Host> activeHosts) {
+//					List<HostToken> tokens = new ArrayList<>();
+//					for(DynomiteNodeInfo node: nodes){
+//						tokens.add(new HostToken(new Long(node.getTokens()), node.toHOST()));
+//					}
+//					return tokens;
+//				}
+//				@Override
+//				public HostToken getTokenForHost(Host host, Set<Host> activeHosts) {
+//					DynomiteNodeInfo dni = mapNodes.get(host.getHostName());
+//					return new HostToken(new Long(dni.getTokens()), dni.toHOST());
+//				}
 		};
 		return testTokenMapSupplier;
 	}

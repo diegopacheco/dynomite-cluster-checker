@@ -26,11 +26,6 @@ public class DCCConnectionManager {
 
 	public static DynoJedisClient createCluster(String clusterName,final List<DynomiteNodeInfo> nodes){
 		
-		if (nodes.get(0)!=null){
-			ConfigurationManager.getConfigInstance().setProperty("EC2_AVAILABILITY_ZONE",nodes.get(0).getRack());
-			ConfigurationManager.getConfigInstance().setProperty("EC2_REGION",nodes.get(0).getRack());
-		}
-
 		ConfigurationManager.getConfigInstance().setProperty("dyno." + clusterName + ".retryPolicy","RetryNTimes:1:true");
 		
 		DynoJedisClient dynoClient = new DynoJedisClient.Builder().withApplicationName(clusterName)

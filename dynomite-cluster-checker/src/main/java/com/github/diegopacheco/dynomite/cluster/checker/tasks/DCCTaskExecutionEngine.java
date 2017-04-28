@@ -34,14 +34,15 @@ public class DCCTaskExecutionEngine {
 		}
 		
 		stopWatch.stop();
-		ec.setTimeToRunDCC(stopWatch.getDiffAsString());
+		
+		ec.getExecutionReport().setTimeToRun(stopWatch.getDiffAsString());
 		new GetJsonReportResultTask().execute(ec);
 
-		return ec.getJsonResult();
+		return ec.getExecutionReport().getJsonResult();
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(new DCCTaskExecutionEngine().run("172.18.0.201:8101:rack1:dc:100|172.18.0.202:8101:rack2:dc:100|172.18.0.203:8101:rack3:dc:100", false));
+		System.out.println(new DCCTaskExecutionEngine().run("172.18.0.101:8101:rack1:dc:100|172.18.0.102:8101:rack2:dc:100|172.18.0.104:8101:rack3:dc:100", false));
 	}
 	
 }

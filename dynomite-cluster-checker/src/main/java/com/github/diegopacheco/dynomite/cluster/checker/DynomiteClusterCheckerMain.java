@@ -25,7 +25,7 @@ import com.netflix.dyno.jedis.DynoJedisClient;
 public class DynomiteClusterCheckerMain {
 
 	private StringBuffer bufferdLogger = new StringBuffer();
-	private ResultReport resultReport = new ResultReport();
+	private ExecutionReport resultReport = new ExecutionReport();
 
 	public static void main(String[] args) {
 		Long init = System.currentTimeMillis();
@@ -66,7 +66,7 @@ public class DynomiteClusterCheckerMain {
 		Long init = System.currentTimeMillis();
 
 		resultReport.setNodesReport(new ArrayList<>());
-		CheckerResponse checkerResponse = new CheckerResponse();
+		NodeCheckerResponse checkerResponse = new NodeCheckerResponse();
 
 		bufferedLogInfo("");
 		bufferedLogInfo("**** BEGIN DYNOMITE CLUSTER CHECKER ****");
@@ -78,7 +78,7 @@ public class DynomiteClusterCheckerMain {
 		badNodes.removeAll(validNodes);
 
 		if (badNodes != null && badNodes.size() >= 1) {
-			resultReport.setBadNodes(badNodes);
+			resultReport.setOfflineNodes((badNodes));
 			bufferedLogInfo("BAD NODES:");
 			for (DynomiteNodeInfo node : badNodes) {
 				bufferedLogInfo("    " + node.toString());
@@ -103,7 +103,7 @@ public class DynomiteClusterCheckerMain {
 			otherSeeds.remove(0);
 			if (otherSeeds.size() >= 1) {
 				for (DynomiteNodeInfo node : otherSeeds) {
-					checkerResponse = new CheckerResponse();
+					checkerResponse = new NodeCheckerResponse();
 					checkNode(false, node, node.getServer(), checkerResponse);
 					resultReport.getNodesReport().add(checkerResponse);
 				}
@@ -131,7 +131,7 @@ public class DynomiteClusterCheckerMain {
 		return jsonResult;
 	}
 
-	private void checkNode(boolean primary, DynomiteNodeInfo node, String server, CheckerResponse checkerResponse) {
+	private void checkNode(boolean primary, DynomiteNodeInfo node, String server, NodeCheckerResponse checkerResponse) {
 		checkerResponse.setServer(node.getServer());
 		bufferedLogInfo("Checking Node: " + checkerResponse.getServer());
 
@@ -196,7 +196,7 @@ public class DynomiteClusterCheckerMain {
 		return returnResult;
 	}
 
-	private void insert(String key, String value, String clusterName, DynomiteNodeInfo node,CheckerResponse checkerResponse) {
+	private void insert(String key, String value, String clusterName, DynomiteNodeInfo node,NodeCheckerResponse checkerResponse) {
 		DynoJedisClient cluster = null;
 		try {
 			cluster = DCCConnectionManager.createSingleNodeCluster(clusterName, node);
@@ -214,7 +214,7 @@ public class DynomiteClusterCheckerMain {
 		}
 	}
 
-	private String get(String key, String clusterName, DynomiteNodeInfo node, CheckerResponse checkerResponse) {
+	private String get(String key, String clusterName, DynomiteNodeInfo node, NodeCheckerResponse checkerResponse) {
 		DynoJedisClient cluster = null;
 		try {
 			cluster = DCCConnectionManager.createSingleNodeCluster(clusterName, node);

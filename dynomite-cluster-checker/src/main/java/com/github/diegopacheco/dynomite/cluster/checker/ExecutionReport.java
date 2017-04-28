@@ -1,18 +1,19 @@
 package com.github.diegopacheco.dynomite.cluster.checker;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
-import com.google.common.collect.ImmutableList;
 
-public class ResultReport {
+public class ExecutionReport {
 	
-	private String timeToRun;
-	private String failoverStatus;
-	private List<CheckerResponse> nodesReport;
-	private List<DynomiteNodeInfo> badNodes;
+	private String timeToRun = "";
+	private String failoverStatus = "";
+	private List<NodeCheckerResponse> nodesReport = new ArrayList<>();
+	private List<DynomiteNodeInfo>   offlineNodes = new ArrayList<>();
+	private String jsonResult = "";
 	
-	public ResultReport() {}
+	public ExecutionReport() {}
 
 	public String getFailoverStatus() {
 		return failoverStatus;
@@ -25,25 +26,17 @@ public class ResultReport {
 		this.failoverStatus = failoverStatus;
 	}
 
-	public List<CheckerResponse> getNodesReport() {
+	public List<NodeCheckerResponse> getNodesReport() {
 		return nodesReport;
 	}
 	
 	public int getBadNodesTelemetry() {
-		return (badNodes==null) ? 0 : badNodes.size();
+		return (offlineNodes==null) ? 0 : offlineNodes.size();
 	}
 	
-	public void setNodesReport(List<CheckerResponse> nodesReport) {
+	public void setNodesReport(List<NodeCheckerResponse> nodesReport) {
 		this.nodesReport = nodesReport;
 	}
-	
-	public List<DynomiteNodeInfo> getBadNodes() {
-		return badNodes;
-	}
-	public void setBadNodes(List<DynomiteNodeInfo> badNodes) {
-		this.badNodes =  ImmutableList.copyOf(badNodes);
-	}
-	
 	
 	public String getTimeToRun() {
 		return timeToRun;
@@ -51,12 +44,28 @@ public class ResultReport {
 	public void setTimeToRun(String timeToRun) {
 		this.timeToRun = timeToRun;
 	}
+	
+	public List<DynomiteNodeInfo> getOfflineNodes() {
+		return offlineNodes;
+	}
+
+	public void setOfflineNodes(List<DynomiteNodeInfo> offlineNodes) {
+		this.offlineNodes = offlineNodes;
+	}
+
+	public String getJsonResult() {
+		return jsonResult;
+	}
+
+	public void setJsonResult(String jsonResult) {
+		this.jsonResult = jsonResult;
+	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((badNodes == null) ? 0 : badNodes.hashCode());
+		result = prime * result + ((offlineNodes == null) ? 0 : offlineNodes.hashCode());
 		result = prime * result + ((failoverStatus == null) ? 0 : failoverStatus.hashCode());
 		result = prime * result + ((nodesReport == null) ? 0 : nodesReport.hashCode());
 		return result;
@@ -70,11 +79,11 @@ public class ResultReport {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ResultReport other = (ResultReport) obj;
-		if (badNodes == null) {
-			if (other.badNodes != null)
+		ExecutionReport other = (ExecutionReport) obj;
+		if (offlineNodes == null) {
+			if (other.offlineNodes != null)
 				return false;
-		} else if (!badNodes.equals(other.badNodes))
+		} else if (!offlineNodes.equals(other.offlineNodes))
 			return false;
 		if (failoverStatus == null) {
 			if (other.failoverStatus != null)
@@ -91,6 +100,6 @@ public class ResultReport {
 
 	@Override
 	public String toString() {
-		return "ResultReport [failoverStatus=" + failoverStatus + ", nodesReport=" + nodesReport + ", badNodes=" + badNodes + "]";
+		return "ResultReport [failoverStatus=" + failoverStatus + ", nodesReport=" + nodesReport + ", badNodes=" + offlineNodes + "]";
 	}
 }

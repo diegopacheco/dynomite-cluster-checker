@@ -38,13 +38,13 @@ public class DynomiteNodeInfo {
         	   + "\",\"ip\":\"" + this.getServer()
         	   + "\",\"zone\":\"" +  this.getRack()			                
         	   + "\",\"rack\":\"" +  this.getRack()
-        	   + "\",\"dc\":\"" +  this.getDc()
+        	   + "\",\"dc\":\"" +  this.getRack()
         	   + "\"} ";
 	}
 	
 	public Host toHOST(){
-		return new Host(this.getServer(),this.getServer(),new Integer(this.getPort()),this.getRack(),this.getDc(),Status.Up);
-		//return new Host(this.getServer(),8102,this.getRack(),Status.Up);
+		//return new Host(this.getServer(),this.getServer(),new Integer(this.getPort()),this.getRack(),this.getDc(),Status.Up);
+		return new Host(this.getServer(),8102,this.getRack(),Status.Up);
 	}
 
 	public String getServer() {

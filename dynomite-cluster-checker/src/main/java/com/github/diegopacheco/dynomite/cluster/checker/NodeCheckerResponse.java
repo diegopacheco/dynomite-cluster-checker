@@ -10,7 +10,7 @@ import com.github.diegopacheco.dynomite.cluster.checker.util.JsonPrinter;
  * @version 1.0
  *
  */
-public class CheckerResponse implements JsonPrinter {
+public class NodeCheckerResponse implements JsonPrinter {
 	
 	private String server; 
 	private String seeds;
@@ -21,9 +21,9 @@ public class CheckerResponse implements JsonPrinter {
 	private String insertError = null;
 	private String getError = null;
 	
-	public CheckerResponse() {}
+	public NodeCheckerResponse() {}
 
-	public CheckerResponse(String seeds, String insertTime, String getTime, boolean consistency,String server) {
+	public NodeCheckerResponse(String seeds, String insertTime, String getTime, boolean consistency,String server) {
 		super();
 		this.seeds = seeds;
 		this.insertTime = insertTime;
@@ -93,6 +93,10 @@ public class CheckerResponse implements JsonPrinter {
 		setInsertTime(null);
 		setGetTime(null);
 		setConsistency(false);
+		setSeeds("");
+		setServer("");
+		setGetError("");
+		setInsertError("");
 	}
 	
 	public String toJson(){
