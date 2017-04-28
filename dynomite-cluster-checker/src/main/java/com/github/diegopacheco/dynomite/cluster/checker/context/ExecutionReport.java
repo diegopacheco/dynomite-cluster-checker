@@ -8,7 +8,10 @@ import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
 public class ExecutionReport {
 	
 	private String timeToRun = "";
+	
 	private String failoverStatus = "";
+	private Integer replicationCount = 0;
+	
 	private List<NodeCheckerResponse> nodesReport = new ArrayList<>();
 	private List<DynomiteNodeInfo>   offlineNodes = new ArrayList<>();
 	private String jsonResult = "";
@@ -60,6 +63,13 @@ public class ExecutionReport {
 	public void setJsonResult(String jsonResult) {
 		this.jsonResult = jsonResult;
 	}
+	
+	public Integer getReplicationCount() {
+		return replicationCount;
+	}
+	public void setReplicationCount(Integer replicationCount) {
+		this.replicationCount = replicationCount;
+	}
 
 	@Override
 	public int hashCode() {
@@ -100,6 +110,8 @@ public class ExecutionReport {
 
 	@Override
 	public String toString() {
-		return "ResultReport [failoverStatus=" + failoverStatus + ", nodesReport=" + nodesReport + ", badNodes=" + offlineNodes + "]";
+		return "ExecutionReport [timeToRun=" + timeToRun + ", failoverStatus=" + failoverStatus + ", replicationCount="
+				+ replicationCount + ", nodesReport=" + nodesReport + ", offlineNodes=" + offlineNodes + "]";
 	}
+	
 }

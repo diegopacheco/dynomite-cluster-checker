@@ -53,7 +53,7 @@ public class CheckDataReplicationTask implements Task {
 				nodeReport = new NodeCheckerResponse();
 			}
 		}
-		System.out.println("Replication Count == " + count);
+		ec.getExecutionReport().setReplicationCount(count);
 		
 	}
 
