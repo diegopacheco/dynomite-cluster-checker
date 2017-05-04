@@ -62,6 +62,7 @@ dependencies {
 			   'javax.servlet:servlet-api:2.5',
 			   'org.apache.commons:commons-lang3:3.4',
 			   'org.slf4j:slf4j-simple:1.7.21',
+			   'com.google.inject:guice:4.1.0'
 		    ])
 		    
 	compile('com.netflix.dyno:dyno-jedis:1.5.8-rc.4'){

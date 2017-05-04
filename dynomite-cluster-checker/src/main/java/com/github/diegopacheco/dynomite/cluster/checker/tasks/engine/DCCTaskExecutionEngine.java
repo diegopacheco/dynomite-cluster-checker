@@ -1,17 +1,16 @@
 package com.github.diegopacheco.dynomite.cluster.checker.tasks.engine;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import com.github.diegopacheco.dynomite.cluster.checker.context.ExecutionContext;
-import com.github.diegopacheco.dynomite.cluster.checker.tasks.CheckClusterFailoverTask;
-import com.github.diegopacheco.dynomite.cluster.checker.tasks.CheckDataReplicationTask;
-import com.github.diegopacheco.dynomite.cluster.checker.tasks.CheckNodesConnectivityTask;
-import com.github.diegopacheco.dynomite.cluster.checker.tasks.CleanUpTask;
 import com.github.diegopacheco.dynomite.cluster.checker.tasks.GetJsonReportResultTask;
-import com.github.diegopacheco.dynomite.cluster.checker.tasks.SetupTask;
 import com.github.diegopacheco.dynomite.cluster.checker.tasks.Task;
 import com.github.diegopacheco.dynomite.cluster.checker.util.Chronometer;
+import com.github.diegopacheco.dynomite.cluster.config.GuiceModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.name.Names;
 
 /**
  * DCCTaskExecutionEngine executes all tasks in DCC.
@@ -21,21 +20,20 @@ import com.github.diegopacheco.dynomite.cluster.checker.util.Chronometer;
  */
 public class DCCTaskExecutionEngine {
 	
+	@SuppressWarnings("unchecked")
 	public String run(String seeds, boolean telemetryMode) {
 		
-		Chronometer stopWatch = new Chronometer();
+		Injector injector = Guice.createInjector(new GuiceModule());
+		
+		ExecutionContext ec = injector.getInstance(ExecutionContext.class);
+		
+		Chronometer stopWatch = injector.getInstance(Chronometer.class);
 		stopWatch.start();
 		
-		ExecutionContext ec = new ExecutionContext();
 		ec.setRawSeeds(seeds);
 		ec.setIsTelemetryMode(telemetryMode);
 		
-		List<Task> tasks = new LinkedList<>();
-		tasks.add(new SetupTask());
-		tasks.add(new CheckNodesConnectivityTask());
-		tasks.add(new CheckDataReplicationTask());
-		tasks.add(new CheckClusterFailoverTask());
-		tasks.add(new CleanUpTask());
+		List<Task> tasks = injector.getInstance(Key.get(List.class, Names.named("tasks")));
 		
 		for(Task t : tasks){
 			t.execute(ec);
@@ -44,7 +42,9 @@ public class DCCTaskExecutionEngine {
 		stopWatch.stop();
 		ec.getExecutionReport().setTimeToRun(stopWatch.getDiffAsString());
 		
-		new GetJsonReportResultTask().execute(ec);
+		GetJsonReportResultTask jsonFinalReportTask = injector.getInstance(GetJsonReportResultTask.class);
+		jsonFinalReportTask.execute(ec);
+		
 		return ec.getExecutionReport().getJsonResult();
 	}
 

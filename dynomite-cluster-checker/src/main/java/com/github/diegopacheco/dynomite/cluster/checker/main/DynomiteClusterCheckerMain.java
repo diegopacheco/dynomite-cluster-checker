@@ -17,6 +17,7 @@ public class DynomiteClusterCheckerMain {
 	public static void main(String[] args) {
 		Chronometer stopWatch = new Chronometer();
 		try {
+
 			stopWatch.start();
 			Boolean isTelemetryMode = isTelemtryModeSet(args) ? true : false;
 			
@@ -24,6 +25,8 @@ public class DynomiteClusterCheckerMain {
 			String jsonResult = dcc.run(args[0], isTelemetryMode);
 			
 			System.out.println(jsonResult);
+		}catch(Exception e){
+			System.out.println("Error: " + e);
 		} finally {
 			stopWatch.stop();
 			
