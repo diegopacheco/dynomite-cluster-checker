@@ -31,7 +31,7 @@ Dynomite Cluster Checker checks if a Dynomite cluster is working properly via Dy
 ## Checking Dynomite Cluster
 
 ```bash
-./gradlew execute -Dexec.args="127.0.0.1:8102:rack1:localdc:1383429731"
+./gradlew execute -Dexec.args="172.18.0.101:8101:rack1:dc:100|172.18.0.102:8101:rack2:dc:100|172.18.0.103:8101:rack3:dc:100"
 ```
 DCC will output 
 ```bash
