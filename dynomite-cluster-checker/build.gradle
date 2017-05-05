@@ -6,7 +6,7 @@ apply plugin: 'eclipse'
 version = '1.0'
 sourceCompatibility = 1.8
 
-mainClassName = "com.github.diegopacheco.dynomite.cluster.checker.DynomiteClusterCheckerMain"
+mainClassName = "com.github.diegopacheco.dynomite.cluster.checker.main.DynomiteClusterCheckerMain"
 
 applicationDefaultJvmArgs = [
 								 "-Djava.net.preferIPv4Stack=true",
@@ -55,21 +55,21 @@ eclipse {
 }
 
 dependencies {
+
+	testCompile('junit:junit:4.11')
+
 	compile([
 			   'javax.servlet:servlet-api:2.5',
 			   'org.apache.commons:commons-lang3:3.4',
 			   'org.slf4j:slf4j-simple:1.7.21',
-			   'com.netflix.hystrix:hystrix-core:1.5.6'
+			   'com.google.inject:guice:4.1.0'
 		    ])
-    testCompile('junit:junit:4.11')
-	compile('com.netflix.dyno:dyno-jedis:1.5.7'){
+		    
+	compile('com.netflix.dyno:dyno-jedis:1.5.8-rc.4'){
 	     exclude group: 'org.slf4j', module: 'slf4j-api'
-	}		    
+	}		
+	    
 }
-
-//httpPort = 7766
-///stopPort = 7765
-//stopKey = "stopKey"
 
 jar {
 	from(configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }) {
@@ -92,7 +92,6 @@ jar {
 // ./gradlew execute -Dexec.args="local"
 // ./gradlew execute -Dexec.args="127.0.0.1:8102:rack1:localdc:1383429731"
 // ./gradlew execute -Dexec.args="127.0.0.1:8102:rack1:localdc:1383429731|127.0.0.1:8102:rack1:localdc:1383429731|127.0.0.1:8102:rack1:localdc:1383429731"
-// ./gradlew execute -Dexec.args="127.0.0.1:8102:rack1:localdc:1383429731|127.0.0.1:8102:rack1:localdc:1383429731|127.011.1:8102:rack1:localdc:1383429731"
 //
 task execute(type:JavaExec) {
 	main = mainClassName

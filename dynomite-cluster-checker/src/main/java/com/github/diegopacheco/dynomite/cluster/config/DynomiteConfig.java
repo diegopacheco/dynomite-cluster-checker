@@ -1,4 +1,4 @@
-package com.github.diegopacheco.dynomite.cluster.checker;
+package com.github.diegopacheco.dynomite.cluster.config;
 
 public class DynomiteConfig {
 	
