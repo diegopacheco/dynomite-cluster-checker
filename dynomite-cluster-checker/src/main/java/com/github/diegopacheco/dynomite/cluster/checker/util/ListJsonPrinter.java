@@ -3,10 +3,8 @@ package com.github.diegopacheco.dynomite.cluster.checker.util;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.github.diegopacheco.dynomite.cluster.checker.ResultReport;
+import com.github.diegopacheco.dynomite.cluster.checker.context.ExecutionReport;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
 
 /**
  * Pritns a list of JsonPrinter in Json.
@@ -17,19 +15,20 @@ import com.google.common.collect.Lists;
  */
 public class ListJsonPrinter {
 	
-	public static String print(ResultReport rr){
+	public static String print(ExecutionReport rr){
 		List<? extends JsonPrinter> list = rr.getNodesReport();
 		
 		StringBuffer sb = new StringBuffer("{\n\r");
 		sb.append(" \"timeToRun\": \"" + rr.getTimeToRun() + " seconds" + "\",\n\r");
 		sb.append(" \"failoverStatus\": \"" + rr.getFailoverStatus() +  "\",\n\r");
+		sb.append(" \"replicationCount\": \"" + rr.getReplicationCount() +  "\",\n\r");
 		
-		if(rr.getBadNodes()!=null && rr.getBadNodes().size() >= 1 ){
+		if(rr.getOfflineNodes()!=null && rr.getOfflineNodes().size() >= 1 ){
 			sb.append(" \"badNodes\": [");
 			int i = 0;
-			for(DynomiteNodeInfo node: rr.getBadNodes()){
+			for(DynomiteNodeInfo node: rr.getOfflineNodes()){
 				sb.append("\"" + node.toString() + "\"");
-				if ((i+1) < rr.getBadNodes().size())
+				if ((i+1) < rr.getOfflineNodes().size())
 					sb.append(", ");
 				i++;
 			}
@@ -49,15 +48,16 @@ public class ListJsonPrinter {
 		return sb.toString();
 	}
 	
-	public static String printTelemetry(ResultReport rr){
+	public static String printTelemetry(ExecutionReport rr){
 		List<? extends JsonPrinter> list = rr.getNodesReport();
 		
 		StringBuffer sb = new StringBuffer("{\n\r");
 		sb.append(" \"timeToRun\": \"" + rr.getTimeToRun() +  "\",\n\r");
 		sb.append(" \"failoverStatus\": \"" + rr.getFailoverStatusTelemetry() +  "\",\n\r");
+		sb.append(" \"replicationCount\": \"" + rr.getReplicationCount() +  "\",\n\r");
 
 		if (areBadNodes(rr.getBadNodesTelemetry()))
-			sb.append(" \"badNodeNames\": \""+ String.join(",", rr.getBadNodes().stream().map(badNode -> badNode.getServer()).collect(Collectors.toList()))  + "\", \n\r");
+			sb.append(" \"badNodeNames\": \""+ String.join(",", rr.getOfflineNodes().stream().map(badNode -> badNode.getServer()).collect(Collectors.toList()))  + "\", \n\r");
 
 		sb.append(" \"badNodes\": "+ rr.getBadNodesTelemetry()  + ", \n\r");
 		

@@ -1,4 +1,4 @@
-package com.github.diegopacheco.dynomite.cluster.checker;
+package com.github.diegopacheco.dynomite.cluster.checker.context;
 
 import com.github.diegopacheco.dynomite.cluster.checker.util.JsonPrinter;
 
@@ -10,20 +10,21 @@ import com.github.diegopacheco.dynomite.cluster.checker.util.JsonPrinter;
  * @version 1.0
  *
  */
-public class CheckerResponse implements JsonPrinter {
+public class NodeCheckerResponse implements JsonPrinter {
 	
 	private String server; 
 	private String seeds;
 	private String insertTime;
 	private String getTime;
-	private boolean consistency = false;
 	
+	private boolean consistency = false;
+
 	private String insertError = null;
 	private String getError = null;
 	
-	public CheckerResponse() {}
+	public NodeCheckerResponse() {}
 
-	public CheckerResponse(String seeds, String insertTime, String getTime, boolean consistency,String server) {
+	public NodeCheckerResponse(String seeds, String insertTime, String getTime, boolean consistency,String server) {
 		super();
 		this.seeds = seeds;
 		this.insertTime = insertTime;
@@ -87,12 +88,15 @@ public class CheckerResponse implements JsonPrinter {
 	public void setGetError(String getError) {
 		this.getError = getError;
 	}
-	
-	
+
 	public void cleanUp(){
 		setInsertTime(null);
 		setGetTime(null);
 		setConsistency(false);
+		setSeeds("");
+		setServer("");
+		setGetError("");
+		setInsertError("");
 	}
 	
 	public String toJson(){
@@ -103,32 +107,32 @@ public class CheckerResponse implements JsonPrinter {
 					"\"getTime\":\""      + getTime + "\"," +
 					"\"insertError\":\""  + insertError + "\"," +
 					"\"getError\":\""     + getError + "\"," +
-					"\"consistency\":\""  + consistency + "\"" +
+					"\"consistency\":\""  + consistency + ",\"" +
 				"}";
 	}
 	
 	public String toPrettyJson(){
-		return "  {\r\n"  + 
+		return  pritIfNotNull("  {\r\n",boolToString(true))  + 
 				pritIfNotNull("    \"server\":\""  + server + "\",\r\n",server) +
 				pritIfNotNull("    \"seeds\":\"" + seeds + "\",\r\n",seeds) +
 				pritIfNotNull("    \"insertTime\":\"" + insertTime + "\",\r\n",insertTime) +
 				pritIfNotNull("    \"getTime\":\""    + getTime + "\",\r\n",getTime) +
-				pritIfNotNull("    \"insertError\":\""  + insertError + "\",",insertError) +
-				pritIfNotNull("    \"getError\":\""     + getError + "\",",getError)       +
-				"    \"consistency\":\""  + consistency + "\"\r\n" +
-				"  }";
+				pritIfNotNull("    \"insertError\":\""  + insertError + "\", \r\n",insertError) +
+				pritIfNotNull("    \"getError\":\""     + getError + "\", \r\n ",getError)       +
+				pritIfNotNull("    \"consistency\":\""  + consistency + "\"\r\n,",boolToString(consistency))  +
+				pritIfNotNull("  }",boolToString(true));
 	}
 	
 	public String toPrettyTelemetryJson(){
-		return "  {\r\n"  + 
+		return  pritIfNotNull("  {\r\n",boolToString(true))  + 
 				pritIfNotNull("    \"server\":\""  + server + "\",\r\n",server) +
 				pritIfNotNull("    \"seeds\":\"" + seeds + "\",\r\n",seeds) +
 				pritIfNotNull("    \"insertTime\":\"" + getInsertTime(insertTime)  + "\",\r\n",insertTime) +
 				pritIfNotNull("    \"getTime\":\""    + new Double(getTime().replace("ms", "").trim()).intValue() + "\",\r\n",getTime) +
 				pritIfNotNull("    \"insertError\":\""  + resolveErrorTelemetry(insertError) + "\",\r\n",resolveErrorTelemetry(insertError)) +
 				pritIfNotNull("    \"getError\":\""     + resolveErrorTelemetry(getError) + "\",\r\n",resolveErrorTelemetry(getError))       +
-				"    \"consistency\":\""  + resolveBoolean(consistency) + "\"\r\n" +
-				"  }";
+				pritIfNotNull("    \"consistency\":\""  + resolveBoolean(consistency) + "\"\r\n" ,boolToString(consistency))  +
+				pritIfNotNull("  }",boolToString(true));
 	}
 
 	private String getTime() {
@@ -141,6 +145,10 @@ public class CheckerResponse implements JsonPrinter {
 
 	private int resolveBoolean(boolean bol){
 		return (bol) ? 0 : 1;
+	}
+	
+	private String boolToString(boolean bol){
+		return (bol) ? "true" : "false";
 	}
 	
 	private String pritIfNotNull(String msg,String field){

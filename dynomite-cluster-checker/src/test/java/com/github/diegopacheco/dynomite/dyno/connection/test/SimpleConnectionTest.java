@@ -9,8 +9,8 @@ import java.util.Set;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.github.diegopacheco.dynomite.cluster.checker.DynomiteConfig;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
+import com.github.diegopacheco.dynomite.cluster.config.DynomiteConfig;
 import com.netflix.dyno.connectionpool.Host;
 import com.netflix.dyno.connectionpool.Host.Status;
 import com.netflix.dyno.connectionpool.HostSupplier;

@@ -1,5 +1,9 @@
 package com.github.diegopacheco.dynomite.cluster.checker.parser;
 
+import com.netflix.dyno.connectionpool.Host;
+import com.netflix.dyno.connectionpool.Host.Status;
+import com.netflix.dyno.jedis.DynoJedisClient;
+
 /**
  * Represents a Dynomite Seed Node Configuration
  * 
@@ -15,6 +19,7 @@ public class DynomiteNodeInfo {
 	private String rack;
 	private String dc;
 	private String tokens;
+	private DynoJedisClient nodeClient;
 	
 	public DynomiteNodeInfo() {}
 
@@ -25,6 +30,21 @@ public class DynomiteNodeInfo {
 		this.rack = rack;
 		this.dc = dc;
 		this.tokens = tokens;
+	}
+	
+	public String toJsonTopology(){
+		return " { \"token\":\""+ this.getTokens() 
+        	   + "\",\"hostname\":\"" + this.getServer()
+        	   + "\",\"ip\":\"" + this.getServer()
+        	   + "\",\"zone\":\"" +  this.getRack()			                
+        	   + "\",\"rack\":\"" +  this.getRack()
+        	   + "\",\"dc\":\"" +  this.getRack()
+        	   + "\"} ";
+	}
+	
+	public Host toHOST(){
+		//return new Host(this.getServer(),this.getServer(),new Integer(this.getPort()),this.getRack(),this.getDc(),Status.Up);
+		return new Host(this.getServer(),8102,this.getRack(),Status.Up);
 	}
 
 	public String getServer() {
@@ -67,6 +87,13 @@ public class DynomiteNodeInfo {
 		this.tokens = tokens;
 	}
 	
+	public DynoJedisClient getNodeClient() {
+		return nodeClient;
+	}
+	public void setNodeClient(DynoJedisClient nodeClient) {
+		this.nodeClient = nodeClient;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
