@@ -19,8 +19,8 @@ public class ClientCache {
 
 	static {
 		cache =  CacheBuilder.newBuilder().
-				  maximumSize(1000).
-				  expireAfterWrite(1, TimeUnit.MINUTES).
+				  maximumSize(500).
+				  expireAfterWrite(2, TimeUnit.HOURS).
 				  removalListener(new RemovalListener<String, DynoJedisClient>(){
 						@Override
 						public void onRemoval(RemovalNotification<String, DynoJedisClient> notification) {
