@@ -40,11 +40,18 @@ buildscript {
 apply plugin: 'org.akhikhl.gretty'
 
 gretty {
-	jvmArgs = [
-			'-Xms256m',
-			'-Xmx2048m',
-			'-XX:-HeapDumpOnOutOfMemoryError',
-			'-XX:ErrorFile=./hs_err_pid%p.log']
+	jvmArgs = ['-Xms256m',
+			   '-Xmx2048m',
+			   '-XX:-HeapDumpOnOutOfMemoryError',
+			   '-XX:ErrorFile=./hs_err_pid%p.log']
+
+	if (System.getenv('ENABLE_JMX') == 'true') {
+		jvmArgs = jvmArgs +  ['-Dcom.sun.management.jmxremote',
+							  '-Dcom.sun.management.jmxremote.port=7094',
+							  '-Dcom.sun.management.jmxremote.ssl=false',
+							  '-Dcom.sun.management.jmxremote.authenticate=false']
+	}
+
 	httpPort = 7766
 }
 
