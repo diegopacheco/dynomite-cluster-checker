@@ -45,7 +45,7 @@ gretty {
 			   '-XX:-HeapDumpOnOutOfMemoryError',
 			   '-XX:ErrorFile=./hs_err_pid%p.log']
 
-	if (System.getenv('ENABLE_JMX') == '1') {
+	if (System.getenv('ENABLE_JMX') == 'true') {
 		jvmArgs = jvmArgs +  ['-Dcom.sun.management.jmxremote',
 							  '-Dcom.sun.management.jmxremote.port=7094',
 							  '-Dcom.sun.management.jmxremote.ssl=false',
