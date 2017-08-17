@@ -3,6 +3,7 @@ package com.github.diegopacheco.dynomite.cluster.config;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.github.diegopacheco.dynomite.cluster.checker.cluster.cache.ClientCache;
 import com.github.diegopacheco.dynomite.cluster.checker.context.ExecutionContext;
 import com.github.diegopacheco.dynomite.cluster.checker.tasks.CheckClusterFailoverTask;
 import com.github.diegopacheco.dynomite.cluster.checker.tasks.CheckDataReplicationTask;
@@ -26,15 +27,11 @@ public class GuiceModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		
 		bind(Chronometer.class);
-		
 		bind(ExecutionContext.class);
-		
+		bind(ClientCache.class).asEagerSingleton();
 		bind(GetJsonReportResultTask.class).asEagerSingleton();
-		
 		bind(List.class).annotatedWith(Names.named("tasks")).toProvider(TasksProvider.class);
-		
 	}
 
 	public static class TasksProvider implements Provider<List<Task>> {

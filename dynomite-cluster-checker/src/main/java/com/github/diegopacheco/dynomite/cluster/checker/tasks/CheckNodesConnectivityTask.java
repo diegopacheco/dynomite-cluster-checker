@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.diegopacheco.dynomite.cluster.checker.cluster.DCCConnectionManager;
+import com.github.diegopacheco.dynomite.cluster.checker.cluster.cache.ClientCache;
 import com.github.diegopacheco.dynomite.cluster.checker.context.ExecutionContext;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
 import com.github.diegopacheco.dynomite.cluster.config.DynomiteConfig;
@@ -34,7 +35,12 @@ public class CheckNodesConnectivityTask implements Task {
 	private void connectWholeCluster(ExecutionContext ec) {
 		try {
 			
-			DynoJedisClient client = DCCConnectionManager.createCluster(DynomiteConfig.CLUSTER_NAME,ec.getOnlineNodes());
+			DynoJedisClient client = ClientCache.get(ec.getRawSeeds());
+			if (client==null){
+			   client = DCCConnectionManager.createCluster(DynomiteConfig.CLUSTER_NAME,ec.getOnlineNodes());
+			   ClientCache.put(ec.getRawSeeds(), client);
+			}
+			 
 			String prefix = "awesomeSbrubles_";
 			client.get(prefix);
 			ec.setWholeClusterClient(client);
@@ -50,7 +56,12 @@ public class CheckNodesConnectivityTask implements Task {
 		for (DynomiteNodeInfo node : ec.getOriginalNodes()) {
 			try {
 				
-				DynoJedisClient client = DCCConnectionManager.createSingleNodeCluster(DynomiteConfig.CLUSTER_NAME,node);
+				DynoJedisClient client = ClientCache.get(node.toSeed());
+				if (client==null){
+					client = DCCConnectionManager.createSingleNodeCluster(DynomiteConfig.CLUSTER_NAME,node);
+					ClientCache.put(node.toSeed(), client);
+				}
+				
 				String prefix = "awesomeSbrubles_";
 				client.get(prefix);
 				
