@@ -29,7 +29,7 @@ public class CleanUpTask implements Task {
 	private void cleanUpWholeClusterConnection(ExecutionContext ec) {
 		try{
 			ec.getWholeClusterClient().del(DynomiteConfig.TEST_KEY);
-			QuietThread.sleep(2000L);
+			//QuietThread.sleep(2000L);
 		}catch(Throwable t){
 			System.out.println("Cloud not clean up data on whole cluster. EX: " + t);
 		}
