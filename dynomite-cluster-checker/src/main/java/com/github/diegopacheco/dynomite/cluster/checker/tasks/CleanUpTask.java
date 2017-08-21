@@ -22,7 +22,7 @@ public class CleanUpTask implements Task {
 	private void cleanUpNodesConnections(ExecutionContext ec) {
 		for(DynomiteNodeInfo node : ec.getOnlineNodes()){
 			node.getNodeClient().del(DynomiteConfig.TEST_KEY);
-			node.getNodeClient().stopClient();
+			//node.getNodeClient().stopClient();
 		}
 	}
 
@@ -35,7 +35,7 @@ public class CleanUpTask implements Task {
 		}
 		
 		try{
-			ec.getWholeClusterClient().stopClient();
+			//ec.getWholeClusterClient().stopClient();
 		}catch(Throwable t){
 			System.out.println("Cloud not STOP whole cluster. EX: " + t);
 		}
