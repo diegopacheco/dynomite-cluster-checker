@@ -34,7 +34,6 @@ public class DCCConnectionManager {
 				new ArchaiusConnectionPoolConfiguration(clusterName)
 					.withTokenSupplier(TokenMapSupplierFactory.build(nodes))
 					.setMaxConnsPerHost(1)
-					//.setConnectTimeout(5000)
 				    .setRetryPolicyFactory(new RetryNTimes.RetryFactory(1,true))
 		)
 		.withHostSupplier(HostSupplierFactory.build(nodes))

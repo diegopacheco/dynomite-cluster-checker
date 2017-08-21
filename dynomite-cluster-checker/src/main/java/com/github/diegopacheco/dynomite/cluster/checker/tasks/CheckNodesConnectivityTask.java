@@ -3,6 +3,8 @@ package com.github.diegopacheco.dynomite.cluster.checker.tasks;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.github.diegopacheco.dynomite.cluster.checker.cluster.DCCConnectionManager;
 import com.github.diegopacheco.dynomite.cluster.checker.cluster.cache.ClientCache;
 import com.github.diegopacheco.dynomite.cluster.checker.context.ExecutionContext;
@@ -18,6 +20,8 @@ import com.netflix.dyno.jedis.DynoJedisClient;
  *
  */
 public class CheckNodesConnectivityTask implements Task {
+	
+	private static final Logger logger = Logger.getLogger(CheckNodesConnectivityTask.class);
 	
 	@Override
 	public void execute(ExecutionContext ec) {
@@ -46,7 +50,7 @@ public class CheckNodesConnectivityTask implements Task {
 			ec.setWholeClusterClient(client);
 			
 		} catch (Throwable t) {
-			System.out.println("Could not Connet on Whole cluster : " + ec.getOnlineNodes() + " EX: " + t);
+			logger.error("Could not Connet on Whole cluster : " + ec.getOnlineNodes() + " EX: " + t);
 		} finally {
 		}
 	}
@@ -69,7 +73,7 @@ public class CheckNodesConnectivityTask implements Task {
 				onlineNodes.add(node);
 				
 			} catch (Throwable t) {
-				System.out.println("Could not Connet on Node: " + node + " EX: " + t);
+				logger.error("Could not Connet on Node: " + node + " EX: " + t);
 			} finally {
 			}
 		}

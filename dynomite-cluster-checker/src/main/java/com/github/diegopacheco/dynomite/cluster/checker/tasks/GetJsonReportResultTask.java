@@ -13,10 +13,8 @@ public class GetJsonReportResultTask implements Task {
 	
 	@Override
 	public void execute(ExecutionContext ec) {
-		
 		String jsonResult = (ec.getIsTelemetryMode()) ? ListJsonPrinter.printTelemetry(ec.getExecutionReport()) : ListJsonPrinter.print(ec.getExecutionReport());
 		ec.getExecutionReport().setJsonResult(jsonResult);
-	
 	}
 	
 }

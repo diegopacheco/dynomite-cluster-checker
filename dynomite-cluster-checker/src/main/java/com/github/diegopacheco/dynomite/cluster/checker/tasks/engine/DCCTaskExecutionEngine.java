@@ -34,7 +34,6 @@ public class DCCTaskExecutionEngine {
 		ec.setIsTelemetryMode(telemetryMode);
 		
 		List<Task> tasks = injector.getInstance(Key.get(List.class, Names.named("tasks")));
-		
 		for(Task t : tasks){
 			t.execute(ec);
 		}
