@@ -12,8 +12,8 @@ applicationDefaultJvmArgs = [
 								 "-Djava.net.preferIPv4Stack=true",
 								 "-Djava.net.preferIPv6Addresses=false",
 								 "-server",
-								 "-Xmx2048m",
-								 "-Xms128m",
+								 "-Xmx1024m",
+								 "-Xms4096m",
 							 ]
 
 run {
@@ -41,8 +41,8 @@ buildscript {
 apply plugin: 'org.akhikhl.gretty'
 
 gretty {
-	jvmArgs = ['-Xms256m',
-			   '-Xmx2048m',
+	jvmArgs = ['-Xms1024m',
+			   '-Xmx4096m',
 			   '-XX:-HeapDumpOnOutOfMemoryError',
 			   '-XX:ErrorFile=./hs_err_pid%p.log']
 
