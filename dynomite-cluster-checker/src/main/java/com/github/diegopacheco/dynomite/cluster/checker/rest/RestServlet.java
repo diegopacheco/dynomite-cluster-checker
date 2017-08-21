@@ -17,7 +17,8 @@ import com.github.diegopacheco.dynomite.cluster.checker.tasks.engine.DCCTaskExec
 public class RestServlet extends HttpServlet {
 
 	private Logger logger = Logger.getLogger(RestServlet.class);
-
+	private static DCCTaskExecutionEngine dccEngine = new DCCTaskExecutionEngine();
+	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		PrintWriter out = resp.getWriter();
@@ -31,7 +32,7 @@ public class RestServlet extends HttpServlet {
 			boolean shouldRunTelemetryMode = resolveTelemetryMode(req.getParameterValues("telemetry"));
 			logArgs(req);
 			
-			String json = new DCCTaskExecutionEngine().run(seeds, shouldRunTelemetryMode);
+			String json = dccEngine.run(seeds, shouldRunTelemetryMode);
 			out.write(json);
 			
 		}catch(Exception e){

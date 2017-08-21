@@ -20,10 +20,10 @@ import com.google.inject.name.Names;
  */
 public class DCCTaskExecutionEngine {
 	
+	private static Injector injector = Guice.createInjector(new GuiceModule());
+	
 	@SuppressWarnings("unchecked")
 	public String run(String seeds, boolean telemetryMode) {
-		
-		Injector injector = Guice.createInjector(new GuiceModule());
 		
 		ExecutionContext ec = injector.getInstance(ExecutionContext.class);
 		
