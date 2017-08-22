@@ -12,8 +12,8 @@ applicationDefaultJvmArgs = [
 								 "-Djava.net.preferIPv4Stack=true",
 								 "-Djava.net.preferIPv6Addresses=false",
 								 "-server",
-								 "-Xmx2048m",
-								 "-Xms128m",
+								 "-Xmx4096m",
+								 "-Xms1024m",
 							 ]
 
 run {
@@ -22,6 +22,7 @@ run {
 			'-agentlib:jdwp=transport=dt_socket,address=9009,server=y,suspend=y'
 	}
 }
+
 
 repositories {
 	jcenter()
@@ -40,11 +41,18 @@ buildscript {
 apply plugin: 'org.akhikhl.gretty'
 
 gretty {
-	jvmArgs = [
-			'-Xms256m',
-			'-Xmx2048m',
-			'-XX:-HeapDumpOnOutOfMemoryError',
-			'-XX:ErrorFile=./hs_err_pid%p.log']
+	jvmArgs = ['-Xms1024m',
+			   '-Xmx4096m',
+			   '-XX:-HeapDumpOnOutOfMemoryError',
+			   '-XX:ErrorFile=./hs_err_pid%p.log']
+
+	if (System.getenv('ENABLE_JMX') == 'true') {
+		jvmArgs = jvmArgs +  ['-Dcom.sun.management.jmxremote',
+							  '-Dcom.sun.management.jmxremote.port=7094',
+							  '-Dcom.sun.management.jmxremote.ssl=false',
+							  '-Dcom.sun.management.jmxremote.authenticate=false']
+	}
+
 	httpPort = 7766
 }
 
@@ -59,11 +67,11 @@ dependencies {
 	testCompile('junit:junit:4.11')
 
 	compile([
-			   'javax.servlet:servlet-api:2.5',
-			   'org.apache.commons:commons-lang3:3.4',
-			   'org.slf4j:slf4j-simple:1.7.21',
-			   'com.google.inject:guice:4.1.0'
-		    ])
+		   'javax.servlet:servlet-api:2.5',
+		   'org.apache.commons:commons-lang3:3.4',
+		   'org.slf4j:slf4j-simple:1.7.21',
+		   'com.google.inject:guice:4.1.0'
+	])
 		    
 	compile('com.netflix.dyno:dyno-jedis:1.5.8-rc.4'){
 	     exclude group: 'org.slf4j', module: 'slf4j-api'

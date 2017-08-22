@@ -1,17 +1,20 @@
 package com.github.diegopacheco.dynomite.cluster.checker.tasks;
 
+import org.apache.log4j.Logger;
+
 import com.github.diegopacheco.dynomite.cluster.checker.context.ExecutionContext;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
-import com.github.diegopacheco.dynomite.cluster.checker.util.QuietThread;
 import com.github.diegopacheco.dynomite.cluster.config.DynomiteConfig;
 
 /**
- * CleanUpTask this task will clean up all previous dynomite tasks side effects 
+ * CleanUpTask this task will clean up all previous dynomite tasks side effects
  * 
  * @author diegopacheco
  *
  */
 public class CleanUpTask implements Task {
+
+	private static final Logger logger = Logger.getLogger(CleanUpTask.class);
 	
 	@Override
 	public void execute(ExecutionContext ec) {
@@ -20,25 +23,21 @@ public class CleanUpTask implements Task {
 	}
 
 	private void cleanUpNodesConnections(ExecutionContext ec) {
-		for(DynomiteNodeInfo node : ec.getOnlineNodes()){
-			node.getNodeClient().del(DynomiteConfig.TEST_KEY);
-			node.getNodeClient().stopClient();
+		for (DynomiteNodeInfo node : ec.getOnlineNodes()) {
+			try {
+				node.getNodeClient().del(DynomiteConfig.TEST_KEY);
+			} catch (Throwable t) {
+				logger.error("Cloud not clean up data on node. EX: " + t + " node: " + node);
+			}
 		}
 	}
 
 	private void cleanUpWholeClusterConnection(ExecutionContext ec) {
-		try{
+		try {
 			ec.getWholeClusterClient().del(DynomiteConfig.TEST_KEY);
-			QuietThread.sleep(2000L);
-		}catch(Throwable t){
-			System.out.println("Cloud not clean up data on whole cluster. EX: " + t);
-		}
-		
-		try{
-			ec.getWholeClusterClient().stopClient();
-		}catch(Throwable t){
-			System.out.println("Cloud not STOP whole cluster. EX: " + t);
+		} catch (Throwable t) {
+			logger.error("Cloud not clean up data on whole cluster. EX: " + t);
 		}
 	}
-	
-}	
+
+}

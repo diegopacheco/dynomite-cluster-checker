@@ -20,10 +20,10 @@ import com.google.inject.name.Names;
  */
 public class DCCTaskExecutionEngine {
 	
+	private static Injector injector = Guice.createInjector(new GuiceModule());
+	
 	@SuppressWarnings("unchecked")
 	public String run(String seeds, boolean telemetryMode) {
-		
-		Injector injector = Guice.createInjector(new GuiceModule());
 		
 		ExecutionContext ec = injector.getInstance(ExecutionContext.class);
 		
@@ -34,7 +34,6 @@ public class DCCTaskExecutionEngine {
 		ec.setIsTelemetryMode(telemetryMode);
 		
 		List<Task> tasks = injector.getInstance(Key.get(List.class, Names.named("tasks")));
-		
 		for(Task t : tasks){
 			t.execute(ec);
 		}

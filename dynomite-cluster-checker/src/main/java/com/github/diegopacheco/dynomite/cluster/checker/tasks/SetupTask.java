@@ -16,12 +16,10 @@ public class SetupTask implements Task{
 	
 	@Override
 	public void execute(ExecutionContext ec) {
-		
 		ec.setRawSeeds( processSeeds(ec.getRawSeeds()) );
 		
 		List<DynomiteNodeInfo> originalNodes = DynomiteSeedsParser.parse(ec.getRawSeeds());
 		ec.setOriginalNodes(originalNodes);
-		
 	}
 	
 	private String processSeeds(String rawSeeds) {

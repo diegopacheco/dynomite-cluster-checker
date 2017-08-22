@@ -1,6 +1,5 @@
 package com.github.diegopacheco.dynomite.cluster.checker.cluster;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,6 @@ import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
 import com.netflix.dyno.connectionpool.Host;
 import com.netflix.dyno.connectionpool.TokenMapSupplier;
 import com.netflix.dyno.connectionpool.impl.lb.AbstractTokenMapSupplier;
-import com.netflix.dyno.connectionpool.impl.lb.HostToken;
 
 /**
  * TokenMapSupplierFactory creates TokenMapSupplier baased on DynomiteNodeInfo.
@@ -61,19 +59,6 @@ public class TokenMapSupplierFactory {
 				public String getTopologyJsonPayload(Set<Host> activeHosts) {
 					return json;
 				}
-//				@Override
-//				public List<HostToken> getTokens(Set<Host> activeHosts) {
-//					List<HostToken> tokens = new ArrayList<>();
-//					for(DynomiteNodeInfo node: nodes){
-//						tokens.add(new HostToken(new Long(node.getTokens()), node.toHOST()));
-//					}
-//					return tokens;
-//				}
-//				@Override
-//				public HostToken getTokenForHost(Host host, Set<Host> activeHosts) {
-//					DynomiteNodeInfo dni = mapNodes.get(host.getHostName());
-//					return new HostToken(new Long(dni.getTokens()), dni.toHOST());
-//				}
 		};
 		return testTokenMapSupplier;
 	}

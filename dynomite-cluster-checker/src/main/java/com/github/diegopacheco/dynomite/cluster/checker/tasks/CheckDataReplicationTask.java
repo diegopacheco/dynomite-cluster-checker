@@ -1,5 +1,7 @@
 package com.github.diegopacheco.dynomite.cluster.checker.tasks;
 
+import org.apache.log4j.Logger;
+
 import com.github.diegopacheco.dynomite.cluster.checker.context.ExecutionContext;
 import com.github.diegopacheco.dynomite.cluster.checker.context.NodeCheckerResponse;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
@@ -14,12 +16,12 @@ import com.github.diegopacheco.dynomite.cluster.config.DynomiteConfig;
  */
 public class CheckDataReplicationTask implements Task {
 	
+	private static final Logger logger = Logger.getLogger(CheckDataReplicationTask.class);
+	
 	@Override
 	public void execute(ExecutionContext ec) {
-		
 		insertKey(ec);
 		getKeys(ec);
-		
 	}
 
 	private void getKeys(ExecutionContext ec) {
@@ -44,7 +46,7 @@ public class CheckDataReplicationTask implements Task {
 				}
 					
 			}catch(Throwable t){
-				System.out.println("Could not get KEY on node : " + node + " - EX: " + t);
+				logger.error("Could not get KEY on node : " + node + " - EX: " + t);
 				nodeReport.setGetError(t.getMessage());
 			}finally{
 				stopWatch.stop();
@@ -71,7 +73,7 @@ public class CheckDataReplicationTask implements Task {
 			nodeReport.setConsistency(true);
 			
 		}catch(Throwable t){
-			System.out.println("Cloud not insert data into the cluster. EX: " + t);
+			logger.error("Cloud not insert data into the cluster. EX: " + t);
 			nodeReport.setConsistency(false);
 			nodeReport.setInsertError(t.getMessage());
 		}

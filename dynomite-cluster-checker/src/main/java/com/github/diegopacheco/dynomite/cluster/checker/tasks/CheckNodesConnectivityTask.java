@@ -3,7 +3,10 @@ package com.github.diegopacheco.dynomite.cluster.checker.tasks;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.github.diegopacheco.dynomite.cluster.checker.cluster.DCCConnectionManager;
+import com.github.diegopacheco.dynomite.cluster.checker.cluster.cache.ClientCache;
 import com.github.diegopacheco.dynomite.cluster.checker.context.ExecutionContext;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
 import com.github.diegopacheco.dynomite.cluster.config.DynomiteConfig;
@@ -17,6 +20,8 @@ import com.netflix.dyno.jedis.DynoJedisClient;
  *
  */
 public class CheckNodesConnectivityTask implements Task {
+	
+	private static final Logger logger = Logger.getLogger(CheckNodesConnectivityTask.class);
 	
 	@Override
 	public void execute(ExecutionContext ec) {
@@ -34,13 +39,18 @@ public class CheckNodesConnectivityTask implements Task {
 	private void connectWholeCluster(ExecutionContext ec) {
 		try {
 			
-			DynoJedisClient client = DCCConnectionManager.createCluster(DynomiteConfig.CLUSTER_NAME,ec.getOnlineNodes());
+			DynoJedisClient client = ClientCache.get(ec.getRawSeeds());
+			if (client==null){
+			   client = DCCConnectionManager.createCluster(DynomiteConfig.CLUSTER_NAME,ec.getOnlineNodes());
+			   ClientCache.put(ec.getRawSeeds(), client);
+			}
+			 
 			String prefix = "awesomeSbrubles_";
 			client.get(prefix);
 			ec.setWholeClusterClient(client);
 			
 		} catch (Throwable t) {
-			System.out.println("Could not Connet on Whole cluster : " + ec.getOnlineNodes() + " EX: " + t);
+			logger.error("Could not Connet on Whole cluster : " + ec.getOnlineNodes() + " EX: " + t);
 		} finally {
 		}
 	}
@@ -50,7 +60,12 @@ public class CheckNodesConnectivityTask implements Task {
 		for (DynomiteNodeInfo node : ec.getOriginalNodes()) {
 			try {
 				
-				DynoJedisClient client = DCCConnectionManager.createSingleNodeCluster(DynomiteConfig.CLUSTER_NAME,node);
+				DynoJedisClient client = ClientCache.get(node.toSeed());
+				if (client==null){
+					client = DCCConnectionManager.createSingleNodeCluster(DynomiteConfig.CLUSTER_NAME,node);
+					ClientCache.put(node.toSeed(), client);
+				}
+				
 				String prefix = "awesomeSbrubles_";
 				client.get(prefix);
 				
@@ -58,7 +73,7 @@ public class CheckNodesConnectivityTask implements Task {
 				onlineNodes.add(node);
 				
 			} catch (Throwable t) {
-				System.out.println("Could not Connet on Node: " + node + " EX: " + t);
+				logger.error("Could not Connet on Node: " + node + " EX: " + t);
 			} finally {
 			}
 		}

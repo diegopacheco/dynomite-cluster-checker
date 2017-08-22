@@ -16,8 +16,9 @@ import com.github.diegopacheco.dynomite.cluster.checker.tasks.engine.DCCTaskExec
 @SuppressWarnings("serial")
 public class RestServlet extends HttpServlet {
 
-	private Logger logger = Logger.getLogger(RestServlet.class);
-
+	private static final Logger logger = Logger.getLogger(RestServlet.class);
+	private static DCCTaskExecutionEngine dccEngine = new DCCTaskExecutionEngine();
+	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		PrintWriter out = resp.getWriter();
@@ -31,7 +32,7 @@ public class RestServlet extends HttpServlet {
 			boolean shouldRunTelemetryMode = resolveTelemetryMode(req.getParameterValues("telemetry"));
 			logArgs(req);
 			
-			String json = new DCCTaskExecutionEngine().run(seeds, shouldRunTelemetryMode);
+			String json = dccEngine.run(seeds, shouldRunTelemetryMode);
 			out.write(json);
 			
 		}catch(Exception e){
@@ -45,12 +46,12 @@ public class RestServlet extends HttpServlet {
 	@SuppressWarnings("unchecked")
 	private void logArgs(HttpServletRequest req){
 		logger.info("Checking seeds: " + req.getParameter("seeds"));
-		logger.info("TELEMETRY mode: " + req.getParameterValues("telemetry"));
+		logger.debug("TELEMETRY mode: " + req.getParameterValues("telemetry"));
 		
 		Enumeration<String> parameterNames = req.getParameterNames();
 		while(parameterNames.hasMoreElements()){
 			 String paramName = parameterNames.nextElement();
-			 logger.info("Other parameter: " + paramName);
+			 logger.debug("Other parameter: " + paramName);
 		}
 	}
 	

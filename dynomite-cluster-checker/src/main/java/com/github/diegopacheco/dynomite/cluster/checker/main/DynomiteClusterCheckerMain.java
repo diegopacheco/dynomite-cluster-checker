@@ -1,5 +1,7 @@
 package com.github.diegopacheco.dynomite.cluster.checker.main;
 
+import org.apache.log4j.Logger;
+
 import com.github.diegopacheco.dynomite.cluster.checker.tasks.engine.DCCTaskExecutionEngine;
 import com.github.diegopacheco.dynomite.cluster.checker.util.Chronometer;
 
@@ -13,7 +15,9 @@ import com.github.diegopacheco.dynomite.cluster.checker.util.Chronometer;
  *
  */
 public class DynomiteClusterCheckerMain {
-
+	
+	private static final Logger logger = Logger.getLogger(DynomiteClusterCheckerMain.class);
+	
 	public static void main(String[] args) {
 		Chronometer stopWatch = new Chronometer();
 		try {
@@ -24,14 +28,14 @@ public class DynomiteClusterCheckerMain {
 			DCCTaskExecutionEngine dcc = new DCCTaskExecutionEngine();
 			String jsonResult = dcc.run(args[0], isTelemetryMode);
 			
-			System.out.println(jsonResult);
+			logger.info(jsonResult);
 		}catch(Exception e){
-			System.out.println("Error: " + e);
+			logger.error("Error: " + e);
 		} finally {
 			stopWatch.stop();
 			
-			System.out.println("--");
-			System.out.println(stopWatch.getDiffAsSecondsString());
+			logger.info("--");
+			logger.info(stopWatch.getDiffAsSecondsString());
 			
 			System.exit(0);
 		}

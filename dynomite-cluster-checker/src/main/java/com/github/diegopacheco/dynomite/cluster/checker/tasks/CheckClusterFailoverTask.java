@@ -1,5 +1,7 @@
 package com.github.diegopacheco.dynomite.cluster.checker.tasks;
 
+import org.apache.log4j.Logger;
+
 import com.github.diegopacheco.dynomite.cluster.checker.context.ExecutionContext;
 import com.github.diegopacheco.dynomite.cluster.checker.context.NodeCheckerResponse;
 import com.github.diegopacheco.dynomite.cluster.checker.util.Chronometer;
@@ -12,6 +14,8 @@ import com.github.diegopacheco.dynomite.cluster.config.DynomiteConfig;
  *
  */
 public class CheckClusterFailoverTask implements Task{
+	
+	private static final Logger logger = Logger.getLogger(CheckClusterFailoverTask.class);
 	
 	@Override
 	public void execute(ExecutionContext ec) {
@@ -45,7 +49,7 @@ public class CheckClusterFailoverTask implements Task{
 			
 			
 		}catch(Throwable t){
-			System.out.println("Cloud not insert data into the cluster. EX: " + t);
+			logger.error("Cloud not insert data into the cluster. EX: " + t);
 			nodeReport.setConsistency(false);
 			nodeReport.setGetError(t.getMessage());
 			ec.getExecutionReport().setFailoverStatus("Error! EX: " + t.getMessage() + " - info: " + nodeReport.toString() );
