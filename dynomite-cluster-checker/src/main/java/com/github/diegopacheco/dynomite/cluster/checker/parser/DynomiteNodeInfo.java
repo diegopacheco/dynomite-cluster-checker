@@ -43,8 +43,7 @@ public class DynomiteNodeInfo {
 	}
 	
 	public Host toHOST(){
-		//return new Host(this.getServer(),this.getServer(),new Integer(this.getPort()),this.getRack(),this.getDc(),Status.Up);
-		return new Host(this.getServer(),8102,this.getRack(),Status.Up);
+		return new Host(this.getServer(),this.getPort(),this.getRack(),Status.Up);
 	}
 	
 	public String toSeed(){
