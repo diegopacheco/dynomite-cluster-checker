@@ -66,7 +66,7 @@ public class CheckNodesConnectivityTask implements Task {
 					ClientCache.put(node.toSeed(), client);
 				}
 				
-				String prefix = "awesomeSbrubles_";
+				String prefix = "awesomeSbrubles";
 				client.get(prefix);
 				
 				node.setNodeClient(client);
