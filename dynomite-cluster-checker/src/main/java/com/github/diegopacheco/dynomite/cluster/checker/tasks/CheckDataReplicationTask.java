@@ -6,7 +6,7 @@ import com.github.diegopacheco.dynomite.cluster.checker.context.ExecutionContext
 import com.github.diegopacheco.dynomite.cluster.checker.context.NodeCheckerResponse;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
 import com.github.diegopacheco.dynomite.cluster.checker.util.Chronometer;
-import com.github.diegopacheco.dynomite.cluster.config.DynomiteConfig;
+import com.github.diegopacheco.dynomite.cluster.checker.util.KeyValueGnerator;
 
 /**
  * CheckDataReplicationTask verify if all dynomite is doing data replciation properly. 
@@ -37,7 +37,7 @@ public class CheckDataReplicationTask implements Task {
 				nodeReport.setSeeds(node.toString());
 				nodeReport.setServer(node.getServer());
 				
-				String result = node.getNodeClient().get(DynomiteConfig.TEST_KEY);
+				String result = node.getNodeClient().get(ec.getReplicationKey());
 				if(result!= null && (!"".equals(result))){
 					count++;
 					nodeReport.setConsistency(true);
@@ -68,9 +68,14 @@ public class CheckDataReplicationTask implements Task {
 			nodeReport.setSeeds(ec.getRawSeeds());
 			nodeReport.setServer(ec.getOnlineNodes().toString());
 			
-			ec.getWholeClusterClient().set(DynomiteConfig.TEST_KEY,DynomiteConfig.TEST_VALUE);
+			String replicationKey   = KeyValueGnerator.generateKey();
+			String replicationValue = KeyValueGnerator.generateValue();
+			
+			ec.getWholeClusterClient().set(replicationKey,replicationValue);
 			
 			nodeReport.setConsistency(true);
+			ec.setReplicationKey(replicationKey);
+			ec.setReplicationValue(replicationValue);
 			
 		}catch(Throwable t){
 			logger.error("Cloud not insert data into the cluster. EX: " + t);
