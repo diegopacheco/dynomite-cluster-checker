@@ -6,12 +6,16 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.github.diegopacheco.dynomite.cluster.checker.cluster.DCCConnectionManager;
-import com.github.diegopacheco.dynomite.cluster.checker.cluster.cache.ClientCache;
+import com.github.diegopacheco.dynomite.cluster.checker.cluster.RedisNodeConnectionManager;
+import com.github.diegopacheco.dynomite.cluster.checker.cluster.cache.DynoClientCache;
+import com.github.diegopacheco.dynomite.cluster.checker.cluster.cache.RedisClientCache;
 import com.github.diegopacheco.dynomite.cluster.checker.context.ExecutionContext;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
 import com.github.diegopacheco.dynomite.cluster.config.DynomiteConfig;
 import com.google.common.collect.Lists;
 import com.netflix.dyno.jedis.DynoJedisClient;
+
+import redis.clients.jedis.Jedis;
 
 /**
  * CheckNodesConnectivityTask verify if all dynomite nodes are accessible. 
@@ -39,10 +43,10 @@ public class CheckNodesConnectivityTask implements Task {
 	private void connectWholeCluster(ExecutionContext ec) {
 		try {
 			
-			DynoJedisClient client = ClientCache.get(ec.getRawSeeds());
+			DynoJedisClient client = DynoClientCache.get(ec.getRawSeeds());
 			if (client==null){
 			   client = DCCConnectionManager.createCluster(DynomiteConfig.CLUSTER_NAME,ec.getOnlineNodes());
-			   ClientCache.put(ec.getRawSeeds(), client);
+			   DynoClientCache.put(ec.getRawSeeds(), client);
 			}
 			 
 			String prefix = "awesomeSbrubles_";
@@ -60,10 +64,20 @@ public class CheckNodesConnectivityTask implements Task {
 		for (DynomiteNodeInfo node : ec.getOriginalNodes()) {
 			try {
 				
-				DynoJedisClient client = ClientCache.get(node.toSeed());
+				DynoJedisClient client = DynoClientCache.get(node.toSeed());
 				if (client==null){
 					client = DCCConnectionManager.createSingleNodeCluster(DynomiteConfig.CLUSTER_NAME,node);
-					ClientCache.put(node.toSeed(), client);
+					DynoClientCache.put(node.toSeed(), client);
+				}
+				
+				try {
+					Jedis redisClient = RedisClientCache.get(node.toSeedRedis());
+					if(redisClient==null) {
+						redisClient = RedisNodeConnectionManager.createNodeConnection(node);
+						RedisClientCache.put(node.toSeedRedis(), redisClient);
+					}
+				}catch(Exception e) {
+					logger.error("Could not Connet on Redis Node: " + node + " EX: " + e);
 				}
 				
 				String prefix = "awesomeSbrubles";

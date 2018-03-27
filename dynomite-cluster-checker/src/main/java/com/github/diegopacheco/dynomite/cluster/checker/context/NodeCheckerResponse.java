@@ -18,6 +18,7 @@ public class NodeCheckerResponse implements JsonPrinter {
 	private String getTime;
 	
 	private boolean consistency = false;
+	private boolean consistencyRedis = false;
 
 	private String insertError = null;
 	private String getError = null;
@@ -108,6 +109,7 @@ public class NodeCheckerResponse implements JsonPrinter {
 					"\"insertError\":\""  + insertError + "\"," +
 					"\"getError\":\""     + getError + "\"," +
 					"\"consistency\":\""  + consistency + ",\"" +
+					"\"consistencyRedis\":\""  + consistencyRedis + ",\"" +
 				"}";
 	}
 	
@@ -119,6 +121,7 @@ public class NodeCheckerResponse implements JsonPrinter {
 				pritIfNotNull("    \"getTime\":\""    + getTime + "\",\r\n",getTime) +
 				pritIfNotNull("    \"insertError\":\""  + insertError + "\", \r\n",insertError) +
 				pritIfNotNull("    \"getError\":\""     + getError + "\", \r\n ",getError)       +
+				pritIfNotNull("    \"consistencyRedis\":\""  + consistencyRedis  + "\",\r\n",boolToString(consistencyRedis)) +
 				pritIfNotNull("    \"consistency\":\""  + consistency + "\"\r\n,",boolToString(consistency))  +
 				pritIfNotNull("  }",boolToString(true));
 	}
@@ -131,6 +134,7 @@ public class NodeCheckerResponse implements JsonPrinter {
 				pritIfNotNull("    \"getTime\":\""    + new Double(getTime().replace("ms", "").trim()).intValue() + "\",\r\n",getTime) +
 				pritIfNotNull("    \"insertError\":\""  + resolveErrorTelemetry(insertError) + "\",\r\n",resolveErrorTelemetry(insertError)) +
 				pritIfNotNull("    \"getError\":\""     + resolveErrorTelemetry(getError) + "\",\r\n",resolveErrorTelemetry(getError))       +
+				pritIfNotNull("    \"consistencyRedis\":\"" + resolveBoolean(consistencyRedis) + "\",\r\n",boolToString(consistencyRedis))   +
 				pritIfNotNull("    \"consistency\":\""  + resolveBoolean(consistency) + "\"\r\n" ,boolToString(consistency))  +
 				pritIfNotNull("  }",boolToString(true));
 	}
@@ -159,6 +163,38 @@ public class NodeCheckerResponse implements JsonPrinter {
 		return ("".equals(field) || null == field) ? "0" : "1";
 	}
 	
+	public boolean isConsistencyRedis() {
+		return consistencyRedis;
+	}
+	public void setConsistencyRedis(boolean consistencyRedis) {
+		this.consistencyRedis = consistencyRedis;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((seeds == null) ? 0 : seeds.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		NodeCheckerResponse other = (NodeCheckerResponse) obj;
+		if (seeds == null) {
+			if (other.seeds != null)
+				return false;
+		} else if (!seeds.equals(other.seeds))
+			return false;
+		return true;
+	}
+
 	@Override
 	public String toString() {
 		return toPrettyJson();

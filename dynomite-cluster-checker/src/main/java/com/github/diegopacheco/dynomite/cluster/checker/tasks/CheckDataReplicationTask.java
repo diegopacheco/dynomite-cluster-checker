@@ -74,6 +74,7 @@ public class CheckDataReplicationTask implements Task {
 			ec.getWholeClusterClient().set(replicationKey,replicationValue);
 			
 			nodeReport.setConsistency(true);
+			nodeReport.setConsistencyRedis(true);
 			ec.setReplicationKey(replicationKey);
 			ec.setReplicationValue(replicationValue);
 			

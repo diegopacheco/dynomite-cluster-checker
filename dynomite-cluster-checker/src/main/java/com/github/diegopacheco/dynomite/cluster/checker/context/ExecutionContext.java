@@ -90,7 +90,7 @@ public class ExecutionContext {
 	}
 
 	public String getReplicationValue() {
-		return replicationValue;
+		return (replicationValue==null) ? "" : replicationValue;
 	}
 	public void setReplicationValue(String replicationValue) {
 		this.replicationValue = replicationValue;
