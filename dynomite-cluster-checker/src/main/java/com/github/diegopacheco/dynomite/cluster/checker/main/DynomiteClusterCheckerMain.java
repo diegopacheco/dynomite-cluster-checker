@@ -26,7 +26,7 @@ public class DynomiteClusterCheckerMain {
 			Boolean isTelemetryMode = isTelemtryModeSet(args) ? true : false;
 			
 			DCCTaskExecutionEngine dcc = new DCCTaskExecutionEngine();
-			String jsonResult = dcc.run(args[0], isTelemetryMode);
+			String jsonResult = dcc.run(extractArg(0,args), isTelemetryMode);
 			
 			logger.info(jsonResult);
 		}catch(Exception e){
@@ -46,6 +46,14 @@ public class DynomiteClusterCheckerMain {
 			return false;
 		String parameter = args[1];
 		return (parameter.equalsIgnoreCase("false") || parameter.equalsIgnoreCase("true"));
+	}
+	
+	private static String extractArg(int index,String[] args) {
+		 try {
+			 return args[index];
+		 }catch(Exception e) {
+			 return "";
+		 }
 	}
 
 }
