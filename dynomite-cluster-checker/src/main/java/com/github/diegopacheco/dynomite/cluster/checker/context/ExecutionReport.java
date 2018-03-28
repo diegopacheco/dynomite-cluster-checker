@@ -11,6 +11,7 @@ public class ExecutionReport {
 	
 	private String failoverStatus = "";
 	private Integer replicationCount = 0;
+	private Integer redisReplicationCount = 0;
 	
 	private List<NodeCheckerResponse> nodesReport = new ArrayList<>();
 	private List<DynomiteNodeInfo>   offlineNodes = new ArrayList<>();
@@ -71,6 +72,13 @@ public class ExecutionReport {
 		this.replicationCount = replicationCount;
 	}
 
+	public Integer getRedisReplicationCount() {
+		return redisReplicationCount;
+	}
+	public void setRedisReplicationCount(Integer redisReplicationCount) {
+		this.redisReplicationCount = redisReplicationCount;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -111,7 +119,8 @@ public class ExecutionReport {
 	@Override
 	public String toString() {
 		return "ExecutionReport [timeToRun=" + timeToRun + ", failoverStatus=" + failoverStatus + ", replicationCount="
-				+ replicationCount + ", nodesReport=" + nodesReport + ", offlineNodes=" + offlineNodes + "]";
+		    + replicationCount + ", redisReplicationCount=" + redisReplicationCount + ", nodesReport=" + nodesReport
+		    + ", offlineNodes=" + offlineNodes + "]";
 	}
 	
 }

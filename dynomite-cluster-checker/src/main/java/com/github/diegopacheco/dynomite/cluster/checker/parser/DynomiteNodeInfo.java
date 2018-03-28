@@ -19,6 +19,7 @@ public class DynomiteNodeInfo {
 	private String rack;
 	private String dc;
 	private String tokens;
+	private String redisPort = "6379";
 	private DynoJedisClient nodeClient;
 	
 	public DynomiteNodeInfo() {}
@@ -30,6 +31,16 @@ public class DynomiteNodeInfo {
 		this.rack = rack;
 		this.dc = dc;
 		this.tokens = tokens;
+	}
+	
+	public DynomiteNodeInfo(String server, String port, String rack, String dc, String tokens,String redisPort) {
+		super();
+		this.server = server;
+		this.port = port;
+		this.rack = rack;
+		this.dc = dc;
+		this.tokens = tokens;
+		this.redisPort = redisPort;
 	}
 	
 	public String toJsonTopology(){
@@ -49,6 +60,10 @@ public class DynomiteNodeInfo {
 	
 	public String toSeed(){
 		return getServer() + ":" + getPort() + ":" + getRack() + ":" + getDc() + ":" + getTokens();
+	}
+	
+	public String toSeedRedis(){
+		return getServer() + ":" + getPort() + ":" + getRack() + ":" + getDc() + ":" + getTokens() + ":" + getRedisPort();
 	}
 
 	public String getServer() {
@@ -98,6 +113,14 @@ public class DynomiteNodeInfo {
 		this.nodeClient = nodeClient;
 	}
 
+	public String getRedisPort() {
+		return redisPort;
+	}
+
+	public void setRedisPort(String redisPort) {
+		this.redisPort = redisPort;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -125,7 +148,7 @@ public class DynomiteNodeInfo {
 
 	@Override
 	public String toString() {
-		return server  + ":" + port + ":" + rack + ":" + dc + ":" + tokens;
+		return server  + ":" + port + ":" + rack + ":" + dc + ":" + tokens + ":" + redisPort;
 	}
 	
 }

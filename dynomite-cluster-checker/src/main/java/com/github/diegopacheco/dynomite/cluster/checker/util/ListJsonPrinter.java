@@ -22,6 +22,7 @@ public class ListJsonPrinter {
 		sb.append(" \"timeToRun\": \"" + rr.getTimeToRun() + " seconds" + "\",\n\r");
 		sb.append(" \"failoverStatus\": \"" + rr.getFailoverStatus() +  "\",\n\r");
 		sb.append(" \"replicationCount\": \"" + rr.getReplicationCount() +  "\",\n\r");
+		sb.append(" \"redisReplicationCount\": \"" + rr.getRedisReplicationCount() +  "\",\n\r");
 		
 		if(rr.getOfflineNodes()!=null && rr.getOfflineNodes().size() >= 1 ){
 			sb.append(" \"badNodes\": [");
@@ -55,6 +56,7 @@ public class ListJsonPrinter {
 		sb.append(" \"timeToRun\": \"" + rr.getTimeToRun() +  "\",\n\r");
 		sb.append(" \"failoverStatus\": \"" + rr.getFailoverStatusTelemetry() +  "\",\n\r");
 		sb.append(" \"replicationCount\": \"" + rr.getReplicationCount() +  "\",\n\r");
+		sb.append(" \"redisReplicationCount\": \"" + rr.getRedisReplicationCount() +  "\",\n\r");
 
 		if (areBadNodes(rr.getBadNodesTelemetry()))
 			sb.append(" \"badNodeNames\": \""+ String.join(",", rr.getOfflineNodes().stream().map(badNode -> badNode.getServer()).collect(Collectors.toList()))  + "\", \n\r");

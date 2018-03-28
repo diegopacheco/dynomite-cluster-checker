@@ -22,12 +22,16 @@ public class ExecutionContext {
 	private List<DynomiteNodeInfo> offlineNodes  = new ArrayList<>();
 	
 	private DynoJedisClient wholeClusterClient   =  null;
-	
 	private ExecutionReport executionReport = new ExecutionReport();
+	
+	private String replicationKey;
+	private String replicationValue;
+	
+	private String failOverKey;
+	private String failOverValue;
 	
 	public ExecutionContext() {}
 
-	
 	public String getRawSeeds() {
 		return rawSeeds;
 	}
@@ -76,6 +80,35 @@ public class ExecutionContext {
 	}
 	public void setExecutionReport(ExecutionReport executionReport) {
 		this.executionReport = executionReport;
+	}
+
+	public String getReplicationKey() {
+		return replicationKey;
+	}
+	public void setReplicationKey(String replicationKey) {
+		this.replicationKey = replicationKey;
+	}
+
+	public String getReplicationValue() {
+		return (replicationValue==null) ? "" : replicationValue;
+	}
+	public void setReplicationValue(String replicationValue) {
+		this.replicationValue = replicationValue;
+	}
+
+	public String getFailOverKey() {
+		return failOverKey;
+	}
+
+	public void setFailOverKey(String failOverKey) {
+		this.failOverKey = failOverKey;
+	}
+
+	public String getFailOverValue() {
+		return  (failOverValue==null) ? "" : failOverValue;
+	}
+	public void setFailOverValue(String failOverValue) {
+		this.failOverValue = failOverValue;
 	}
 	
 }

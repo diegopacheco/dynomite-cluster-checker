@@ -4,7 +4,6 @@ import org.apache.log4j.Logger;
 
 import com.github.diegopacheco.dynomite.cluster.checker.context.ExecutionContext;
 import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
-import com.github.diegopacheco.dynomite.cluster.config.DynomiteConfig;
 
 /**
  * CleanUpTask this task will clean up all previous dynomite tasks side effects
@@ -25,7 +24,7 @@ public class CleanUpTask implements Task {
 	private void cleanUpNodesConnections(ExecutionContext ec) {
 		for (DynomiteNodeInfo node : ec.getOnlineNodes()) {
 			try {
-				node.getNodeClient().del(DynomiteConfig.TEST_KEY);
+				node.getNodeClient().del(ec.getReplicationKey());
 			} catch (Throwable t) {
 				logger.error("Cloud not clean up data on node. EX: " + t + " node: " + node);
 			}
@@ -34,7 +33,7 @@ public class CleanUpTask implements Task {
 
 	private void cleanUpWholeClusterConnection(ExecutionContext ec) {
 		try {
-			ec.getWholeClusterClient().del(DynomiteConfig.TEST_KEY);
+			ec.getWholeClusterClient().del(ec.getFailOverKey());
 		} catch (Throwable t) {
 			logger.error("Cloud not clean up data on whole cluster. EX: " + t);
 		}

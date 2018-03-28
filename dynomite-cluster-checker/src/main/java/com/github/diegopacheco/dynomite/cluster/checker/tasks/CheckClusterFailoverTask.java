@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 import com.github.diegopacheco.dynomite.cluster.checker.context.ExecutionContext;
 import com.github.diegopacheco.dynomite.cluster.checker.context.NodeCheckerResponse;
 import com.github.diegopacheco.dynomite.cluster.checker.util.Chronometer;
-import com.github.diegopacheco.dynomite.cluster.config.DynomiteConfig;
+import com.github.diegopacheco.dynomite.cluster.checker.util.KeyValueGnerator;
 
 /**
  * CheckClusterFailoverTask test if the cluster failover os working fine.
@@ -29,22 +29,28 @@ public class CheckClusterFailoverTask implements Task{
 			nodeReport.setServer(ec.getOnlineNodes().toString());
 			
 			try{
-				ec.getWholeClusterClient().set(DynomiteConfig.TEST_FAILOVER_KEY,DynomiteConfig.TEST_FAILOVER_VALUE);
+				
+				String failOverKey   = KeyValueGnerator.generateKey();
+				String failOverValue = KeyValueGnerator.generateValue(); 
+				
+				ec.setFailOverKey(failOverKey);
+				ec.setFailOverValue(failOverValue);
+				ec.getWholeClusterClient().set(failOverKey , failOverValue);
 			}catch(Throwable t){
 				nodeReport.setInsertError(t.getMessage());
 			}
 			
-			String result = ec.getWholeClusterClient().get(DynomiteConfig.TEST_FAILOVER_KEY);
+			String result = ec.getWholeClusterClient().get(ec.getFailOverKey());
 			
 			stopWatch.stop();
 			nodeReport.setGetTime(stopWatch.getDiffAsString());
 			
-			if(result!= null && (!"".equals(result))){
+			if(result!= null && (!"".equals(result)) && ec.getFailOverValue().equals(result) ){
 				nodeReport.setConsistency(true);
 				ec.getExecutionReport().setFailoverStatus("OK");
 			}else{
 				nodeReport.setConsistency(false);
-				ec.getExecutionReport().setFailoverStatus("Inconsistent. Expected: " + DynomiteConfig.TEST_FAILOVER_VALUE + ", Got: " + result + " - info: " + nodeReport.toString());
+				ec.getExecutionReport().setFailoverStatus("Inconsistent. Expected: " + ec.getFailOverValue() + ", Got: " + result + " - info: " + nodeReport.toString());
 			}
 			
 			

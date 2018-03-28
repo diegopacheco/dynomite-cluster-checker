@@ -6,8 +6,6 @@ import javax.inject.Singleton;
 
 import org.apache.log4j.Logger;
 
-import com.github.diegopacheco.dynomite.cluster.checker.cluster.DCCConnectionManager;
-import com.github.diegopacheco.dynomite.cluster.checker.parser.DynomiteNodeInfo;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
@@ -15,10 +13,10 @@ import com.google.common.cache.RemovalNotification;
 import com.netflix.dyno.jedis.DynoJedisClient;
 
 @Singleton
-public class ClientCache {
+public class DynoClientCache {
 
 	private static Cache<String, DynoJedisClient> cache;
-	private static final Logger logger = Logger.getLogger(ClientCache.class);
+	private static final Logger logger = Logger.getLogger(DynoClientCache.class);
 
 	static {
 		cache = CacheBuilder.newBuilder().
@@ -47,21 +45,6 @@ public class ClientCache {
 
 	public static void put(String seeds, DynoJedisClient client) {
 		cache.put(seeds, client);
-	}
-
-	public static void main(String[] args) {
-		String seeds = "127.0.0.1:8102:rack1:dc:100";
-		DynoJedisClient client = DCCConnectionManager.createSingleNodeCluster("test1",new DynomiteNodeInfo("127.0.0.1", "8102", "rack1", "dc", "100"));
-
-		ClientCache.put(seeds, client);
-		System.out.println(ClientCache.get(seeds));
-		System.out.println(ClientCache.get(seeds));
-		System.out.println(ClientCache.get(seeds));
-
-		String seeds2 = "127.0.0.1:8102:rack1:dc:0";
-		ClientCache.put(seeds2, client);
-		System.out.println(ClientCache.get(seeds2));
-		System.out.println(ClientCache.get(seeds));
 	}
 
 }

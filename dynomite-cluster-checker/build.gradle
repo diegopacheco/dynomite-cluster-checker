@@ -26,13 +26,13 @@ run {
 
 repositories {
 	jcenter()
-	mavenLocal()
+	mavenCentral()
 }
 
 buildscript {
 	repositories {
 			jcenter()
-			mavenLocal()
+			mavenCentral()
 	}
 	dependencies {
 		classpath 'org.akhikhl.gretty:gretty:+'

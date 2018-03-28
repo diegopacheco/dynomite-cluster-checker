@@ -37,6 +37,10 @@ public class DynomiteSeedsParser {
 			node.setRack(itens[2]);
 			node.setDc(itens[3]);
 			node.setTokens(itens[4]);
+			try {
+				node.setRedisPort(itens[5]);
+			}catch(Exception e) {
+			}
 			result.add(node);
 		}
 		
